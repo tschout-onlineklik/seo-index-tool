@@ -1,0 +1,13 @@
+{
+  "name": "seo-index-tool",
+  "version": "1.0.0",
+  "description": "SEO Index Tool - Google Search Console Index Checker",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "dev": "python -m http.server 8080"
+  },
+  "keywords": ["seo", "indexing", "google-search-console", "web-tool"],
+  "author": "tschout-onlineklik",
+  "license": "MIT"
+}
