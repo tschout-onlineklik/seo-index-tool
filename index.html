@@ -1,869 +1,2183 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<meta name="googlebot" content="noindex, nofollow">
-<title>GSC Index Checker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* ─── Password gate ──────────────────────────── */
-#gate {
-  position: fixed; inset: 0; z-index: 9999;
-  background: #00573C;
-  display: flex; align-items: center; justify-content: center; padding: 1.5rem;
-}
-#gate.hidden { display: none; }
-.gate-box {
-  background: #fff; border-radius: 20px; padding: 2.5rem 2rem 2rem;
-  width: 100%; max-width: 380px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.25);
-  text-align: center; animation: gateIn .35s cubic-bezier(.16,1,.3,1);
-}
-@keyframes gateIn { from { opacity:0; transform:translateY(16px) scale(.97); } }
-.gate-logo { width:52px;height:52px;background:#E8F5EE;border-radius:14px;display:grid;place-items:center;margin:0 auto 1.2rem;color:#00573C; }
-.gate-title { font-size:1.15rem;font-weight:800;letter-spacing:-.025em;color:#002C1E;margin-bottom:.3rem; }
-.gate-sub   { font-size:.78rem;color:#527A6A;margin-bottom:1.75rem;line-height:1.6; }
-.gate-field { position:relative;margin-bottom:.9rem; }
-.gate-field input { width:100%;background:#F2F8F5;border:1.5px solid #B8DFCE;border-radius:10px;color:#002C1E;font-family:'JetBrains Mono',monospace;font-size:.88rem;padding:.8rem 2.8rem .8rem 1rem;outline:none;transition:border-color .2s,box-shadow .2s;letter-spacing:.05em; }
-.gate-field input:focus { border-color:#33B784;box-shadow:0 0 0 3px rgba(51,183,132,.13);background:#fff; }
-.gate-eye { position:absolute;right:.85rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#8AB0A0;padding:0;display:grid;place-items:center; }
-.gate-eye:hover { color:#00573C; }
-.gate-error { font-size:.75rem;color:#EF4444;font-weight:600;margin-bottom:.75rem;min-height:1.1rem;font-family:'JetBrains Mono',monospace; }
-.gate-btn { width:100%;padding:.88rem;background:#00573C;color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,87,60,.3); }
-.gate-btn:hover { background:#005234;transform:translateY(-1px); }
-@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
-.gate-box.shake { animation: shake .4s ease; }
-
-:root {
-  --primary:    #00573C;
-  --secondary:  #33B784;
-  --color-text: #002C1E;
-  --accent:     #96D247;
-  --bg:         #F2F8F5;
-  --white:      #FFFFFF;
-  --border:     #D9EFE5;
-  --border2:    #B8DFCE;
-  --muted:      #527A6A;
-  --subtle:     #8AB0A0;
-  --light:      #E8F5EE;
-  --amber:      #F59E0B;
-  --red:        #EF4444;
-  --shadow-sm:  0 1px 3px rgba(0,87,60,.08);
-  --shadow:     0 4px 16px rgba(0,87,60,.10);
-  --shadow-lg:  0 16px 48px rgba(0,87,60,.16);
-}
-
-html, body { height: 100%; }
-body { background:var(--bg);color:var(--color-text);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;padding-bottom:5rem; }
-
-/* ─── Top bar ── */
-.bar { background:var(--primary);padding:.85rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;box-shadow:0 2px 16px rgba(0,87,60,.28); }
-.bar-brand { display:flex;align-items:center;gap:.65rem; }
-.bar-icon { width:34px;height:34px;background:var(--accent);border-radius:9px;display:grid;place-items:center;flex-shrink:0; }
-.bar-icon svg { color:var(--primary); }
-.bar-name { font-size:.95rem;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1.2; }
-.bar-sub  { font-size:.68rem;color:rgba(255,255,255,.5);font-weight:500; }
-.help-pill { display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:20px;padding:.42rem 1rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:background .18s; }
-.help-pill:hover { background:rgba(255,255,255,.22); }
-
-/* ─── Page ── */
-.page { max-width:720px;margin:0 auto;padding:2rem 1.25rem; }
-
-/* ─── Steps ── */
-.steps { display:flex;align-items:center;margin-bottom:2rem; }
-.step  { display:flex;align-items:center;gap:.5rem; }
-.step-n { width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.74rem;font-weight:800;background:var(--border);color:var(--subtle);flex-shrink:0;transition:all .3s;border:2px solid transparent; }
-.step-n.active { background:var(--white);color:var(--primary);border-color:var(--secondary);box-shadow:0 0 0 3px rgba(51,183,132,.15); }
-.step-n.done   { background:var(--secondary);color:#fff;border-color:var(--secondary); }
-.step-lbl { font-size:.73rem;font-weight:700;color:var(--subtle);white-space:nowrap; }
-.step-lbl.active { color:var(--primary); }
-.step-line { flex:1;height:2px;background:var(--border);margin:0 .6rem;min-width:20px; }
-.step-line.done { background:var(--secondary); }
-
-/* ─── Cards ── */
-.card { background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:1.65rem;margin-bottom:1.1rem;box-shadow:var(--shadow-sm);transition:box-shadow .2s,border-color .2s; }
-.card:focus-within { box-shadow:var(--shadow);border-color:var(--border2); }
-.card-top { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.3rem; }
-.card-left { display:flex;align-items:center;gap:.7rem; }
-.card-ico { width:40px;height:40px;background:var(--light);border-radius:11px;display:grid;place-items:center;flex-shrink:0;color:var(--primary); }
-.card-title { font-size:.97rem;font-weight:800;letter-spacing:-.02em; }
-.card-desc  { font-size:.73rem;color:var(--muted);margin-top:.1rem; }
-.inline-help { display:flex;align-items:center;gap:.35rem;background:var(--light);border:1px solid var(--border2);color:var(--primary);border-radius:8px;padding:.35rem .7rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:background .18s;flex-shrink:0; }
-.inline-help:hover { background:var(--border); }
-
-/* ─── Tabs ── */
-.tab-row { display:flex;gap:.3rem;margin-bottom:1.1rem;background:var(--bg);border-radius:10px;padding:.25rem;border:1.5px solid var(--border); }
-.tab-btn { flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-size:.77rem;font-weight:700;background:none;border:none;color:var(--muted);padding:.45rem .8rem;border-radius:7px;cursor:pointer;transition:all .2s; }
-.tab-btn.active { background:var(--white);color:var(--primary);box-shadow:var(--shadow-sm); }
-
-/* ─── Fields ── */
-.field { margin-bottom:1rem; }
-.field:last-child { margin-bottom:0; }
-label { display:flex;align-items:center;gap:.35rem;font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.45rem; }
-textarea, input[type=text] { width:100%;background:var(--bg);border:1.5px solid var(--border2);border-radius:10px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:.78rem;padding:.8rem 1rem;outline:none;transition:border-color .2s,box-shadow .2s,background .2s;resize:vertical;line-height:1.75; }
-textarea { min-height:130px; }
-textarea:focus, input:focus { border-color:var(--secondary);background:var(--white);box-shadow:0 0 0 3px rgba(51,183,132,.13); }
-::placeholder { color:var(--subtle); }
-.hint { font-size:.7rem;color:var(--subtle);margin-top:.4rem;line-height:1.6;font-family:'JetBrains Mono',monospace; }
-
-/* ─── Cred status ── */
-.cred-pill { display:inline-flex;align-items:center;gap:.45rem;padding:.35rem .85rem;border-radius:20px;margin-top:.8rem;font-size:.73rem;font-weight:700;background:var(--bg);color:var(--muted);border:1.5px solid var(--border2);transition:all .3s; }
-.cred-pill.ok { background:#ECFDF5;color:#065F46;border-color:#6EE7B7; }
-.cred-dot { width:7px;height:7px;border-radius:50%;background:var(--subtle);transition:all .3s;flex-shrink:0; }
-.cred-pill.ok .cred-dot { background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2); }
-
-/* ─── Stats ── */
-.stats { display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-top:1rem; }
-.stat { background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:.9rem .75rem;text-align:center;transition:border-color .2s; }
-.stat.hi { border-color:var(--secondary);background:var(--light); }
-.sn { font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:500;color:var(--color-text);display:block;line-height:1; }
-.sn.g { color:var(--primary); }
-.sn.a { color:var(--amber); }
-.sl { font-size:.66rem;font-weight:700;color:var(--muted);margin-top:.35rem;display:block;text-transform:uppercase;letter-spacing:.05em; }
-
-/* ─── Quota ── */
-.quota-wrap { margin-bottom:1.3rem; }
-.quota-row  { display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem; }
-.quota-lbl  { font-size:.76rem;font-weight:700;color:var(--muted); }
-.quota-val  { font-family:'JetBrains Mono',monospace;font-size:.76rem;font-weight:500;color:var(--color-text); }
-.quota-track { height:7px;background:var(--bg);border:1.5px solid var(--border2);border-radius:99px;overflow:hidden; }
-.quota-fill  { height:100%;border-radius:99px;background:linear-gradient(90deg,var(--secondary),var(--accent));transition:width .5s cubic-bezier(.4,0,.2,1); }
-.quota-fill.warn   { background:linear-gradient(90deg,#F59E0B,#FCD34D); }
-.quota-fill.danger { background:linear-gradient(90deg,var(--red),#FCA5A5); }
-
-/* ─── Progress ── */
-.prog-wrap { display:none;margin-bottom:1.2rem; }
-.prog-wrap.on { display:block; }
-.prog-top { display:flex;justify-content:space-between;margin-bottom:.45rem; }
-.prog-lbl { font-size:.76rem;font-weight:700;color:var(--muted); }
-.prog-pct { font-family:'JetBrains Mono',monospace;font-size:.76rem;font-weight:500;color:var(--primary); }
-.prog-track { height:8px;background:var(--bg);border:1.5px solid var(--border2);border-radius:99px;overflow:hidden; }
-.prog-bar   { height:100%;border-radius:99px;width:0%;background:linear-gradient(90deg,var(--secondary),var(--accent));transition:width .3s ease; }
-
-/* ─── Results table ── */
-.results-wrap { display:none; }
-.results-wrap.on { display:block; }
-.results-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem; }
-.results-title { font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em; }
-.export-btn { display:flex;align-items:center;gap:.35rem;background:var(--light);border:1.5px solid var(--border2);color:var(--primary);border-radius:8px;padding:.35rem .75rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:700;cursor:pointer;transition:background .18s; }
-.export-btn:hover { background:var(--border); }
-
-.result-summary { display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem; }
-.rs { background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:.7rem;text-align:center; }
-.rs.green { background:#ECFDF5;border-color:#6EE7B7; }
-.rs.amber { background:#FFFBEB;border-color:#FDE68A; }
-.rs.red   { background:#FEF2F2;border-color:#FCA5A5; }
-.rs-n { font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:500;display:block;line-height:1; }
-.rs.green .rs-n { color:#065F46; }
-.rs.amber .rs-n { color:#92400E; }
-.rs.red   .rs-n { color:#991B1B; }
-.rs-l { font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-top:.3rem;display:block; }
-.rs.green .rs-l { color:#065F46; }
-.rs.amber .rs-l { color:#92400E; }
-.rs.red   .rs-l { color:#991B1B; }
-
-.tbl-wrap { overflow-x:auto;border-radius:10px;border:1.5px solid var(--border); }
-table { width:100%;border-collapse:collapse;font-size:.75rem; }
-th { background:var(--bg);padding:.65rem .85rem;text-align:left;font-size:.67rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid var(--border);white-space:nowrap; }
-td { padding:.6rem .85rem;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--color-text); }
-tr:last-child td { border-bottom:none; }
-tr:hover td { background:var(--bg); }
-.td-url { font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
-.td-url:hover { color:var(--primary); }
-
-.verdict-badge { display:inline-flex;align-items:center;gap:.3rem;padding:.22rem .6rem;border-radius:6px;font-size:.68rem;font-weight:700;white-space:nowrap; }
-.v-pass    { background:#ECFDF5;color:#065F46;border:1px solid #6EE7B7; }
-.v-fail    { background:#FEF2F2;color:#991B1B;border:1px solid #FCA5A5; }
-.v-neutral { background:#FFFBEB;color:#92400E;border:1px solid #FDE68A; }
-.v-error   { background:#F3F4F6;color:#6B7280;border:1px solid #D1D5DB; }
-
-.coverage-text { font-size:.72rem;color:var(--muted);max-width:180px; }
-.crawl-date    { font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--subtle);white-space:nowrap; }
-
-/* ─── Button ── */
-.btn { width:100%;padding:.95rem;background:var(--primary);color:#fff;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:-.01em;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;box-shadow:0 4px 16px rgba(0,87,60,.22); }
-.btn:hover:not(:disabled) { background:#005234;box-shadow:0 6px 22px rgba(0,87,60,.32);transform:translateY(-1px); }
-.btn:active:not(:disabled) { transform:translateY(0); }
-.btn:disabled { background:var(--border2);color:var(--subtle);box-shadow:none;cursor:not-allowed; }
-.btn-hint { text-align:center;font-size:.72rem;color:var(--subtle);margin-top:.55rem; }
-.divider { border:none;border-top:1.5px solid var(--border);margin:1.25rem 0; }
-
-/* ─── Info callout ── */
-.callout { display:flex;gap:.7rem;align-items:flex-start;background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1.2rem;font-size:.78rem;color:#92400E;line-height:1.7; }
-.callout strong { color:#78350F; }
-.callout-icon { font-size:1.1rem;flex-shrink:0;margin-top:.05rem; }
-.callout.info { background:var(--light);border-color:var(--border2);color:var(--muted); }
-.callout.info strong { color:var(--primary); }
-
-/* ─── Toast ── */
-.toasts { position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column-reverse;gap:.5rem;pointer-events:none; }
-.toast { background:var(--white);border:1.5px solid var(--border2);border-radius:12px;padding:.8rem 1.2rem;font-size:.82rem;font-weight:600;color:var(--color-text);display:flex;align-items:center;gap:.65rem;box-shadow:var(--shadow-lg);animation:tIn .28s ease,tOut .32s ease 3.68s forwards;pointer-events:all;min-width:250px;max-width:420px; }
-.toast.s { border-color:#6EE7B7;background:#ECFDF5;color:#065F46; }
-.toast.e { border-color:#FCA5A5;background:#FEF2F2;color:#991B1B; }
-.toast.i { border-color:#FDE68A;background:#FFFBEB;color:#92400E; }
-@keyframes tIn  { from{opacity:0;transform:translateY(14px);} }
-@keyframes tOut { to  {opacity:0;transform:translateY(-8px);} }
-
-/* ─── Modal ── */
-.overlay { position:fixed;inset:0;background:rgba(0,44,30,.5);backdrop-filter:blur(5px);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem; }
-.overlay.open { display:flex; }
-.modal { background:var(--white);border-radius:22px;width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);animation:mIn .32s cubic-bezier(.16,1,.3,1); }
-@keyframes mIn { from{opacity:0;transform:scale(.96) translateY(12px);} }
-.modal-head { display:flex;align-items:center;justify-content:space-between;padding:1.5rem 1.75rem 1.2rem;border-bottom:1.5px solid var(--border); }
-.modal-title-row { display:flex;align-items:center;gap:.75rem; }
-.modal-ico { width:44px;height:44px;background:var(--light);border-radius:12px;display:grid;place-items:center;color:var(--primary); }
-.modal-h { font-size:1.1rem;font-weight:800;letter-spacing:-.025em; }
-.modal-s { font-size:.73rem;color:var(--muted);margin-top:.1rem;font-weight:500; }
-.modal-x { width:32px;height:32px;border-radius:8px;background:var(--bg);border:1.5px solid var(--border2);color:var(--muted);cursor:pointer;display:grid;place-items:center;transition:all .18s; }
-.modal-x:hover { background:var(--border);color:var(--color-text); }
-.modal-body { overflow-y:auto;padding:1.75rem;flex:1; }
-.modal-body::-webkit-scrollbar { width:5px; }
-.modal-body::-webkit-scrollbar-thumb { background:var(--border2);border-radius:4px; }
-.modal-intro { font-size:.82rem;color:var(--muted);line-height:1.75;margin-bottom:1.75rem; }
-.modal-intro strong { color:var(--color-text); }
-.gstep { display:flex;gap:1rem;margin-bottom:1.65rem; }
-.gstep:last-of-type { margin-bottom:0; }
-.gn-col { display:flex;flex-direction:column;align-items:center;flex-shrink:0; }
-.gn { width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:.78rem;font-weight:800; }
-.gl { flex:1;width:2px;background:var(--border);margin-top:.4rem; }
-.gstep:last-of-type .gl { display:none; }
-.gc { padding-bottom:.25rem; }
-.gt { font-size:.9rem;font-weight:800;margin-bottom:.35rem;letter-spacing:-.01em; }
-.gp { font-size:.8rem;color:var(--muted);line-height:1.75; }
-.gp strong { color:var(--color-text); }
-.gcode { font-family:'JetBrains Mono',monospace;font-size:.72rem;background:var(--bg);border:1.5px solid var(--border2);border-radius:9px;padding:.65rem 1rem;margin-top:.6rem;color:var(--primary);line-height:1.9; }
-.gtip { display:flex;gap:.55rem;align-items:flex-start;background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:10px;padding:.7rem 1rem;margin-top:.65rem;font-size:.77rem;color:#92400E;line-height:1.65; }
-.gok  { display:flex;gap:.55rem;align-items:flex-start;background:#ECFDF5;border:1.5px solid #6EE7B7;border-radius:10px;padding:.7rem 1rem;margin-top:.65rem;font-size:.77rem;color:#065F46;line-height:1.65; }
-.modal-sep { border:none;border-top:1.5px solid var(--border);margin:1.75rem 0; }
-.faq-item { margin-bottom:1rem; }
-.faq-q { font-size:.83rem;font-weight:800;margin-bottom:.25rem; }
-.faq-a { font-size:.78rem;color:var(--muted);line-height:1.7; }
-.faq-a strong { color:var(--color-text); }
-.faq-head { font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.1rem; }
-.modal-foot { padding:1rem 1.75rem 1.5rem;border-top:1.5px solid var(--border); }
-.modal-foot-btn { width:100%;padding:.82rem;background:var(--primary);color:#fff;border:none;border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.87rem;font-weight:800;cursor:pointer;transition:background .18s;letter-spacing:-.01em; }
-.modal-foot-btn:hover { background:#005234; }
-</style>
-</head>
-<body>
-
-<!-- Gate -->
-<div id="gate">
-  <div class="gate-box" id="gateBox">
-    <div class="gate-logo">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    </div>
-    <div class="gate-title">GSC Index Checker</div>
-    <div class="gate-sub">Dit is een beveiligde tool.<br>Voer het wachtwoord in om verder te gaan.</div>
-    <div class="gate-field">
-      <input type="password" id="pwInput" placeholder="Wachtwoord" onkeydown="if(event.key==='Enter')checkPw()">
-      <button class="gate-eye" onclick="togglePw()" title="Toon/verberg">
-        <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </button>
-    </div>
-    <div class="gate-error" id="gateErr"></div>
-    <button class="gate-btn" onclick="checkPw()">Toegang →</button>
-  </div>
-</div>
-
-<!-- Top bar -->
-<div class="bar">
-  <div class="bar-brand">
-    <div class="bar-icon">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    </div>
-    <div>
-      <div class="bar-name">GSC Index Checker</div>
-      <div class="bar-sub">Google Search Console · URL Inspection API</div>
-    </div>
-  </div>
-  <button class="help-pill" onclick="openModal()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-    Hoe werkt dit?
-  </button>
-</div>
-
-<div class="page">
-
-  <!-- Steps -->
-  <div class="steps">
-    <div class="step"><div class="step-n active" id="sn1">1</div><span class="step-lbl active">Credentials</span></div>
-    <div class="step-line" id="sl1"></div>
-    <div class="step"><div class="step-n" id="sn2">2</div><span class="step-lbl">Website &amp; URL's</span></div>
-    <div class="step-line" id="sl2"></div>
-    <div class="step"><div class="step-n" id="sn3">3</div><span class="step-lbl">Controleren</span></div>
-  </div>
-
-  <!-- What does this tool do -->
-  <div class="callout info">
-    <span class="callout-icon">🔍</span>
-    <div>
-      <strong>Wat doet deze tool?</strong> De URL Inspection API controleert per URL of Google de pagina kent, geïndexeerd heeft, en waarom eventueel niet. Dit geeft je inzicht in het échte probleem — zodat je gericht actie kunt ondernemen in Search Console.
-    </div>
-  </div>
-
-  <!-- Card 1: Credentials -->
-  <div class="card">
-    <div class="card-top">
-      <div class="card-left">
-        <div class="card-ico">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div>
-          <div class="card-title">API Credentials</div>
-          <div class="card-desc">Voer je Google Service Account sleutel in</div>
-        </div>
-      </div>
-      <button class="inline-help" onclick="openModal()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-        Hulp nodig?
-      </button>
-    </div>
-
-    <div class="tab-row">
-      <button class="tab-btn active" id="tabJ" onclick="switchTab('json')">JSON Key plakken</button>
-      <button class="tab-btn" id="tabM" onclick="switchTab('manual')">Handmatig invoeren</button>
-    </div>
-
-    <div id="paneJ">
-      <div class="field">
-        <label>Service Account JSON</label>
-        <textarea id="jsonIn" placeholder='{"type":"service_account","project_id":"mijn-project","private_key":"-----BEGIN RSA PRIVATE KEY-----\n...","client_email":"checker@mijn-project.iam.gserviceaccount.com",...}' oninput="parseJson()"></textarea>
-        <div class="hint">📋 Kopieer de volledige inhoud van je .json sleutelbestand en plak die hier</div>
-      </div>
-    </div>
-    <div id="paneM" style="display:none;">
-      <div class="field">
-        <label>Client Email</label>
-        <input type="text" id="mEmail" placeholder="naam@project.iam.gserviceaccount.com" oninput="validateManual()">
-      </div>
-      <div class="field">
-        <label>Private Key (PEM)</label>
-        <textarea id="mKey" rows="5" placeholder="-----BEGIN RSA PRIVATE KEY-----&#10;...&#10;-----END RSA PRIVATE KEY-----" oninput="validateManual()"></textarea>
-      </div>
-    </div>
-    <div class="cred-pill" id="credPill"><div class="cred-dot"></div>Nog geen credentials geladen</div>
-  </div>
-
-  <!-- Card 2: Site + URLs -->
-  <div class="card">
-    <div class="card-top">
-      <div class="card-left">
-        <div class="card-ico">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        </div>
-        <div>
-          <div class="card-title">Website &amp; URL's</div>
-          <div class="card-desc">Vul je GSC property in en de URL's die je wilt controleren</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        GSC Property URL (site URL)
-      </label>
-      <input type="text" id="siteUrl" placeholder="https://www.jouwsite.nl/" oninput="refreshUI()">
-      <div class="hint">⚠ Moet exact overeenkomen met je property in Search Console, inclusief trailing slash. Voor domain properties: <strong>sc-domain:jouwsite.nl</strong></div>
-    </div>
-
-    <div class="field">
-      <label>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        URL's om te controleren
-      </label>
-      <textarea id="urlIn" placeholder="https://www.jouwsite.nl/pagina-1&#10;https://www.jouwsite.nl/pagina-2&#10;https://www.jouwsite.nl/pagina-3" oninput="analyzeUrls()"></textarea>
-      <div class="hint">Eén URL per regel · Dubbelen worden automatisch gefilterd</div>
-    </div>
-
-    <div class="stats" id="statsBar" style="display:none;">
-      <div class="stat"><span class="sn" id="stTotal">0</span><span class="sl">Ingevoerd</span></div>
-      <div class="stat hi"><span class="sn g" id="stUnique">0</span><span class="sl">Uniek &amp; geldig</span></div>
-      <div class="stat"><span class="sn a" id="stDupe">0</span><span class="sl">Dubbel / ongeldig</span></div>
-    </div>
-  </div>
-
-  <!-- Card 3: Run -->
-  <div class="card">
-    <div class="card-top">
-      <div class="card-left">
-        <div class="card-ico">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <div>
-          <div class="card-title">Indexeringsstatus controleren</div>
-          <div class="card-desc">Maximaal 2.000 URL's per dag via de Inspection API</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="quota-wrap">
-      <div class="quota-row">
-        <span class="quota-lbl">Dagelijkse limiet</span>
-        <span class="quota-val" id="quotaNum">0 / 2.000 gebruikt vandaag</span>
-      </div>
-      <div class="quota-track"><div class="quota-fill" id="quotaFill" style="width:0%"></div></div>
-    </div>
-
-    <div class="prog-wrap" id="progWrap">
-      <div class="prog-top">
-        <span class="prog-lbl" id="progTxt">Bezig…</span>
-        <span class="prog-pct" id="progPct">0%</span>
-      </div>
-      <div class="prog-track"><div class="prog-bar" id="progBar"></div></div>
-    </div>
-
-    <!-- Results -->
-    <div class="results-wrap" id="resultsWrap">
-      <hr class="divider" style="margin-top:0;">
-      <div class="results-header">
-        <div class="results-title">Resultaten</div>
-        <button class="export-btn" onclick="exportCsv()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Exporteer CSV
-        </button>
-      </div>
-      <div class="result-summary">
-        <div class="rs green"><span class="rs-n" id="rIndexed">0</span><span class="rs-l">✓ Geïndexeerd</span></div>
-        <div class="rs amber"><span class="rs-n" id="rPartial">0</span><span class="rs-l">⚠ Niet geïndexeerd</span></div>
-        <div class="rs red">  <span class="rs-n" id="rFail">0</span>   <span class="rs-l">✗ Fout / onbekend</span></div>
-      </div>
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>URL</th>
-              <th>Reden / Coverage</th>
-              <th>Laatste crawl</th>
-            </tr>
-          </thead>
-          <tbody id="resultsTbody"></tbody>
-        </table>
-      </div>
-      <hr class="divider">
-    </div>
-
-    <button class="btn" id="submitBtn" onclick="runInspection()" disabled>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Indexeringsstatus ophalen
-    </button>
-    <div class="btn-hint" id="btnHint">Doorloop stap 1 en 2 om door te gaan</div>
-  </div>
-
-</div>
-
-<div class="toasts" id="toasts"></div>
-
-<!-- Modal -->
-<div class="overlay" id="overlay" onclick="maybeClose(event)">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title-row">
-        <div class="modal-ico">
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-        </div>
-        <div>
-          <div class="modal-h">Setup gids — GSC Inspection API</div>
-          <div class="modal-s">Voor online marketeers · ±10 minuten eenmalige setup</div>
-        </div>
-      </div>
-      <button class="modal-x" onclick="closeModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <p class="modal-intro">Om de URL Inspection API te gebruiken heb je een <strong>Google Cloud Service Account</strong> nodig dat als eigenaar aan je Search Console property is toegevoegd. Volg de stappen hieronder.</p>
-
-      <div class="gstep">
-        <div class="gn-col"><div class="gn">1</div><div class="gl"></div></div>
-        <div class="gc">
-          <div class="gt">Google Cloud Project aanmaken</div>
-          <p class="gp">Ga naar <strong>console.cloud.google.com</strong> en log in met het account dat toegang heeft tot Search Console. Maak een nieuw project aan via het project-dropdown bovenin → <strong>"Nieuw project"</strong>.</p>
-          <div class="gcode">🔗 console.cloud.google.com/projectcreate</div>
-        </div>
-      </div>
-
-      <div class="gstep">
-        <div class="gn-col"><div class="gn">2</div><div class="gl"></div></div>
-        <div class="gc">
-          <div class="gt">Google Search Console API inschakelen</div>
-          <p class="gp">Ga naar <strong>API's &amp; Services → Bibliotheek</strong> en zoek op <strong>"Google Search Console API"</strong>. Klik op <strong>Inschakelen</strong>. Let op: dit is een andere API dan de Indexing API.</p>
-          <div class="gcode">🔗 console.cloud.google.com/apis/library<br>→ Zoek: "Google Search Console API" → Inschakelen</div>
-        </div>
-      </div>
-
-      <div class="gstep">
-        <div class="gn-col"><div class="gn">3</div><div class="gl"></div></div>
-        <div class="gc">
-          <div class="gt">Service Account aanmaken + JSON downloaden</div>
-          <p class="gp">Ga naar <strong>API's &amp; Services → Inloggegevens → Inloggegevens aanmaken → Service-account</strong>. Geef het een naam. Ga daarna naar het tabblad <strong>Sleutels → Sleutel toevoegen → JSON</strong>. Sla het bestand veilig op.</p>
-          <div class="gtip"><span>🔒</span><span>Bewaar dit bestand veilig — deel het nooit via e-mail of in gedeelde mappen.</span></div>
-        </div>
-      </div>
-
-      <div class="gstep">
-        <div class="gn-col"><div class="gn">4</div><div class="gl"></div></div>
-        <div class="gc">
-          <div class="gt">Service Account toevoegen als Eigenaar in GSC</div>
-          <p class="gp">Ga naar <strong>search.google.com/search-console</strong> → je property → <strong>Instellingen → Gebruikers en machtigingen → Gebruiker toevoegen</strong>. Vul het service account e-mailadres in en geef het de rol <strong>Eigenaar</strong>.</p>
-          <div class="gcode">📧 naam@project.iam.gserviceaccount.com<br>🔑 Rol: Eigenaar — verplicht voor Inspection API!</div>
-          <div class="gtip"><span>⚠️</span><span>De rol <strong>Eigenaar</strong> is verplicht. "Volledige gebruiker" geeft geen toegang tot de Inspection API.</span></div>
-        </div>
-      </div>
-
-      <div class="gstep">
-        <div class="gn-col"><div class="gn">5</div><div class="gl"></div></div>
-        <div class="gc">
-          <div class="gt">Site URL correct invullen</div>
-          <p class="gp">De <strong>Site URL</strong> moet exact overeenkomen met hoe je property in Search Console staat. Open GSC en kopieer de URL precies zoals hij bovenin staat.</p>
-          <div class="gcode">URL-prefix property: https://www.jouwsite.nl/<br>Domain property:     sc-domain:jouwsite.nl</div>
-          <div class="gtip"><span>⚠️</span><span>Een kleine afwijking (wel/geen www, wel/geen trailing slash) geeft een fout. Kopieer de URL letterlijk uit GSC.</span></div>
-        </div>
-      </div>
-
-      <div class="gstep">
-        <div class="gn-col"><div class="gn">6</div><div class="gl"></div></div>
-        <div class="gc">
-          <div class="gt">Resultaten interpreteren</div>
-          <p class="gp">De tool toont per URL de exacte status die Google teruggeeft:</p>
-          <div class="gcode">✓ Geïndexeerd        → URL staat in de Google-index<br>⚠ Niet geïndexeerd  → Google kent de pagina maar indexeert hem niet<br>✗ Onbekend          → Google heeft de pagina nog nooit gezien</div>
-          <p class="gp" style="margin-top:.6rem;">Bij "Niet geïndexeerd" zie je de reden (bijv. <em>Crawled - currently not indexed</em> of <em>Excluded by noindex</em>). Dit helpt je te bepalen welke actie je moet ondernemen in Search Console.</p>
-          <div class="gok">✅ Pagina's met status "Niet geïndexeerd" kun je gericht handmatig indienen via de URL-inspectietool in GSC — dat geeft de snelste resultaten.</div>
-        </div>
-      </div>
-
-      <hr class="modal-sep">
-      <div class="faq-head">Veelgestelde vragen</div>
-      <div class="faq-item">
-        <div class="faq-q">Wat is het verschil met de vorige Indexing API?</div>
-        <div class="faq-a">De oude Indexing API stuurde een signaal naar Google om een URL te indexeren — maar dat signaal werd buiten JobPosting/BroadcastEvent pagina's grotendeels genegeerd. De Inspection API geeft je terugkoppeling over de werkelijke status en de reden. Zo weet je wat er echt aan de hand is.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Wat is de limiet van de Inspection API?</div>
-        <div class="faq-a">2.000 verzoeken per dag per Google Cloud project. Aanzienlijk meer dan de Indexing API. De tool houdt dit bij in je browser.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Kan ik ook via deze tool indexering aanvragen?</div>
-        <div class="faq-a">Nee — er bestaat geen publieke API om de "URL inspecteren → Indexering aanvragen" knop in GSC te simuleren. Die knop gebruikt een interne Google-route. De snelste werkende aanpak blijft: gebruik de resultaten van deze tool om te zien welke pagina's aandacht nodig hebben, en dien die vervolgens handmatig in via GSC.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Worden mijn gegevens opgeslagen?</div>
-        <div class="faq-a">Nee — credentials en URL's verlaten nooit je browser. Geen server, geen database.</div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="modal-foot-btn" onclick="closeModal()">Sluiten en aan de slag →</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ── Password gate ───────────────────────────────────────────────────────────
-const PW = 'Onlineklik2012', SK = 'gsc_auth2';
-function checkPw() {
-  if (document.getElementById('pwInput').value === PW) {
-    sessionStorage.setItem(SK,'1');
-    document.getElementById('gate').classList.add('hidden');
-  } else {
-    const b = document.getElementById('gateBox');
-    document.getElementById('gateErr').textContent = 'Onjuist wachtwoord — probeer opnieuw';
-    b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
-    document.getElementById('pwInput').value = '';
-    document.getElementById('pwInput').focus();
-  }
-}
-function togglePw() {
-  const inp = document.getElementById('pwInput'), show = inp.type === 'text';
-  inp.type = show ? 'password' : 'text';
-  document.getElementById('eyeIcon').innerHTML = show
-    ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
-    : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
-}
-if (sessionStorage.getItem(SK) === '1') document.getElementById('gate').classList.add('hidden');
-else setTimeout(() => document.getElementById('pwInput').focus(), 100);
-
-// ── State ────────────────────────────────────────────────────────────────────
-let creds = null, urls = [], tab = 'json', running = false;
-let resultData = []; // stores all inspection results for CSV export
-const QKEY = 'gsc_insp_q', QMAX = 2000;
-
-// ── Quota ────────────────────────────────────────────────────────────────────
-function getQ() {
-  const today = new Date().toISOString().slice(0,10);
-  try { const q = JSON.parse(localStorage.getItem(QKEY)||'{}'); return q.date===today?q:{date:today,used:0}; }
-  catch { return {date:new Date().toISOString().slice(0,10),used:0}; }
-}
-function saveQ(q) { localStorage.setItem(QKEY,JSON.stringify(q)); }
-function refreshQuota() {
-  const q = getQ(), pct = Math.min(q.used/QMAX*100,100);
-  document.getElementById('quotaNum').textContent = `${q.used.toLocaleString('nl-NL')} / 2.000 gebruikt vandaag`;
-  const f = document.getElementById('quotaFill');
-  f.style.width = pct+'%';
-  f.className = 'quota-fill'+(pct>=90?' danger':pct>=65?' warn':'');
-}
-
-// ── Steps ────────────────────────────────────────────────────────────────────
-function refreshSteps() {
-  const c = !!creds, u = urls.length > 0, s = !!document.getElementById('siteUrl').value.trim();
-  document.getElementById('sn1').className = 'step-n '+(c?'done':'active');
-  document.getElementById('sl1').className = 'step-line '+(c?'done':'');
-  document.getElementById('sn2').className = 'step-n '+(c&&u&&s?'done':c?'active':'');
-  document.getElementById('sl2').className = 'step-line '+(c&&u&&s?'done':'');
-  document.getElementById('sn3').className = 'step-n '+(c&&u&&s?'active':'');
-}
-
-// ── Credentials ──────────────────────────────────────────────────────────────
-function switchTab(t) {
-  tab = t;
-  document.getElementById('tabJ').className = 'tab-btn'+(t==='json'?' active':'');
-  document.getElementById('tabM').className = 'tab-btn'+(t==='manual'?' active':'');
-  document.getElementById('paneJ').style.display = t==='json'?'':'none';
-  document.getElementById('paneM').style.display = t==='manual'?'':'none';
-  creds = null; setPill(false); refreshUI();
-}
-function setPill(ok, label) {
-  const el = document.getElementById('credPill');
-  el.className = 'cred-pill'+(ok?' ok':'');
-  el.innerHTML = `<div class="cred-dot"></div>${ok?'✓ Geldig — '+label:(label||'Nog geen credentials geladen')}`;
-}
-function parseJson() {
-  const raw = document.getElementById('jsonIn').value.trim();
-  if (!raw) { creds=null; setPill(false); refreshUI(); return; }
-  try {
-    const j = JSON.parse(raw);
-    if (!j.client_email||!j.private_key) { creds=null; setPill(false,'JSON mist client_email of private_key'); refreshUI(); return; }
-    creds = {email:j.client_email, key:j.private_key};
-    setPill(true, j.client_email); refreshUI();
-  } catch { creds=null; setPill(false,'Ongeldige JSON — controleer de opmaak'); refreshUI(); }
-}
-function validateManual() {
-  const email = document.getElementById('mEmail').value.trim();
-  const key   = document.getElementById('mKey').value.trim();
-  if (!email||!key) { creds=null; setPill(false); refreshUI(); return; }
-  if (!email.includes('@')||!key.includes('PRIVATE KEY')) { creds=null; setPill(false,'Email of private key klopt niet'); refreshUI(); return; }
-  creds = {email, key}; setPill(true, email); refreshUI();
-}
-
-// ── URLs ─────────────────────────────────────────────────────────────────────
-function analyzeUrls() {
-  const raw = document.getElementById('urlIn').value;
-  if (!raw.trim()) { urls=[]; document.getElementById('statsBar').style.display='none'; refreshUI(); return; }
-  const parts = raw.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);
-  const valid = parts.filter(u=>{ try{new URL(u);return u.startsWith('http');}catch{return false;} });
-  const seen = new Set(); let dupes=0; urls=[];
-  valid.forEach(u=>{ const n=u.toLowerCase().replace(/\/$/,''); if(seen.has(n))dupes++; else{seen.add(n);urls.push(u);} });
-  document.getElementById('stTotal').textContent  = parts.length;
-  document.getElementById('stUnique').textContent = urls.length;
-  document.getElementById('stDupe').textContent   = dupes + (parts.length - valid.length);
-  document.getElementById('statsBar').style.display = '';
-  refreshUI();
-}
-
-// ── UI refresh ────────────────────────────────────────────────────────────────
-function refreshUI() {
-  refreshSteps(); refreshQuota();
-  const btn  = document.getElementById('submitBtn');
-  const hint = document.getElementById('btnHint');
-  const site = document.getElementById('siteUrl').value.trim();
-  const q = getQ(), rem = QMAX - q.used;
-  if (!creds)       { btn.disabled=true; hint.textContent='↑ Voer eerst je API credentials in (stap 1)'; return; }
-  if (!site)        { btn.disabled=true; hint.textContent='↑ Voer de site URL in van je GSC property (stap 2)'; return; }
-  if (!urls.length) { btn.disabled=true; hint.textContent="↑ Voer URL's in om te controleren (stap 2)"; return; }
-  if (rem<=0)       { btn.disabled=true; hint.textContent='⚠ Daglimiet van 2.000 bereikt — morgen opnieuw'; return; }
-  if (running)      { btn.disabled=true; hint.textContent='Bezig met ophalen…'; return; }
-  const n = Math.min(urls.length, rem);
-  btn.disabled = false;
-  hint.textContent = n < urls.length
-    ? `⚠ Controleert ${n} van ${urls.length} URL's (daglimiet). Rest morgen.`
-    : `Controleert indexeringsstatus van ${n} URL${n!==1?"'s":''}`;
-}
-
-// ── JWT / OAuth ───────────────────────────────────────────────────────────────
-const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
-async function pemToKey(pem) {
-  const b64=pem.replace(/-----[^-]+-----/g,'').replace(/\s+/g,'');
-  const bin=atob(b64); const bytes=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-  return crypto.subtle.importKey('pkcs8',bytes.buffer,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']);
-}
-async function getToken() {
-  const enc = s => b64u(new TextEncoder().encode(JSON.stringify(s)));
-  const now = Math.floor(Date.now()/1000);
-  const h = enc({alg:'RS256',typ:'JWT'});
-  const c = enc({
-    iss: creds.email,
-    scope: 'https://www.googleapis.com/auth/webmasters.readonly',
-    aud: 'https://oauth2.googleapis.com/token',
-    exp: now+3600, iat: now
-  });
-  const inp = `${h}.${c}`;
-  const key = await pemToKey(creds.key);
-  const sig = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(inp));
-  const jwt = `${inp}.${b64u(sig)}`;
-  const res = await fetch('https://oauth2.googleapis.com/token', {
-    method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
-    body: new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion:jwt})
-  });
-  const d = await res.json();
-  if (!d.access_token) throw new Error(d.error_description||'Token ophalen mislukt');
-  return d.access_token;
-}
-
-// ── Verdict helpers ────────────────────────────────────────────────────────────
-function verdictBadge(verdict, indexState) {
-  if (verdict === 'PASS')    return '<span class="verdict-badge v-pass">✓ Geïndexeerd</span>';
-  if (verdict === 'FAIL')    return '<span class="verdict-badge v-fail">✗ Niet geïndexeerd</span>';
-  if (verdict === 'NEUTRAL') return '<span class="verdict-badge v-neutral">⚠ Onbekend</span>';
-  return '<span class="verdict-badge v-error">— Fout</span>';
-}
-const coverageLabels = {
-  'Submitted and indexed':                   'Ingediend en geïndexeerd',
-  'Indexed, not submitted in sitemap':        'Geïndexeerd (niet in sitemap)',
-  'Crawled - currently not indexed':          'Gecrawld — nog niet geïndexeerd',
-  'Discovered - currently not indexed':       'Gevonden — nog niet geïndexeerd',
-  'Page with redirect':                       'Pagina met redirect',
-  'URL is unknown to Google':                 'Onbekend bij Google',
-  'Excluded by \'noindex\' tag':              'Uitgesloten door noindex',
-  'Blocked by robots.txt':                    'Geblokkeerd door robots.txt',
-  'Alternate page with proper canonical tag': 'Alternatief (canonical verwijst elders)',
-  'Duplicate without user-selected canonical':'Duplicaat zonder canonical',
-};
-function translateCoverage(s) { return coverageLabels[s] || s || '—'; }
-function formatDate(iso) {
-  if (!iso) return '—';
-  try { return new Date(iso).toLocaleDateString('nl-NL',{day:'2-digit',month:'2-digit',year:'numeric'}); }
-  catch { return iso; }
-}
-
-// ── Main inspection run ────────────────────────────────────────────────────────
-async function runInspection() {
-  if (running) return;
-  running = true; refreshUI();
-
-  const siteUrl = document.getElementById('siteUrl').value.trim();
-  const q = getQ();
-  const batch = urls.slice(0, QMAX - q.used);
-
-  document.getElementById('progWrap').classList.add('on');
-  document.getElementById('resultsWrap').classList.remove('on');
-  document.getElementById('resultsTbody').innerHTML = '';
-  resultData = [];
-
-  toast('i','🔍',`Indexeringsstatus van ${batch.length} URL's ophalen…`);
-
-  let token;
-  try {
-    token = await getToken();
-  } catch(e) {
-    toast('e','❌','Authenticatie mislukt: '+e.message);
-    running=false; refreshUI(); return;
-  }
-
-  let indexed=0, notIndexed=0, errors=0;
-  const tbody = document.getElementById('resultsTbody');
-
-  for (let i=0; i<batch.length; i++) {
-    const url = batch[i];
-    setProgress(i, batch.length);
-
-    let verdict='ERROR', coverage='', lastCrawl='', rawVerdict='';
-    try {
-      const res = await fetch('https://searchconsole.googleapis.com/v1/urlInspection/index:inspect', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-        body: JSON.stringify({inspectionUrl: url, siteUrl: siteUrl})
-      });
-      const d = await res.json();
-      if (res.ok && d.inspectionResult) {
-        const r = d.inspectionResult.indexStatusResult || {};
-        rawVerdict = r.verdict || 'NEUTRAL';
-        verdict    = rawVerdict;
-        coverage   = translateCoverage(r.coverageState || '');
-        lastCrawl  = formatDate(r.lastCrawlTime);
-        if (rawVerdict==='PASS') indexed++;
-        else if (rawVerdict==='FAIL') notIndexed++;
-        else notIndexed++;
-      } else {
-        const msg = d.error?.message || `HTTP ${res.status}`;
-        coverage = msg; verdict='ERROR'; errors++;
-      }
-    } catch(e) {
-      coverage = 'Netwerkfout'; verdict='ERROR'; errors++;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>GSC Index Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    resultData.push({url, verdict, coverage, lastCrawl});
+    /* Gate */
+    #gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #00573C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
 
-    const badge = verdictBadge(verdict);
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${badge}</td>
-      <td><div class="td-url" title="${url}">${url}</div></td>
-      <td><div class="coverage-text">${coverage}</div></td>
-      <td><span class="crawl-date">${lastCrawl}</span></td>`;
-    tbody.appendChild(tr);
+    #gate.hidden {
+      display: none;
+    }
 
-    // small delay to respect rate limits (600/min = 1 per 100ms)
-    if (i < batch.length-1) await new Promise(r=>setTimeout(r,120));
-  }
+    .gate-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2.5rem 2rem 2rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, .25);
+      text-align: center;
+      animation: gateIn .35s cubic-bezier(.16, 1, .3, 1);
+    }
 
-  setProgress(batch.length, batch.length);
-  q.used += batch.length; saveQ(q); refreshQuota();
+    @keyframes gateIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(.97);
+      }
+    }
 
-  document.getElementById('rIndexed').textContent = indexed;
-  document.getElementById('rPartial').textContent = notIndexed;
-  document.getElementById('rFail').textContent    = errors;
-  document.getElementById('resultsWrap').classList.add('on');
+    .gate-logo {
+      width: 52px;
+      height: 52px;
+      background: #E8F5EE;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 1.2rem;
+      color: #00573C;
+    }
 
-  if (errors===0) toast('s','✅',`Klaar! ${indexed} geïndexeerd · ${notIndexed} niet geïndexeerd`);
-  else            toast('i','⚠',`Klaar · ${indexed} geïndexeerd · ${notIndexed} niet · ${errors} fout`);
+    .gate-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -.025em;
+      color: #002C1E;
+      margin-bottom: .3rem;
+    }
 
-  running=false; refreshUI();
-}
+    .gate-sub {
+      font-size: .78rem;
+      color: #527A6A;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+    }
 
-function setProgress(cur, tot) {
-  const pct = tot>0?Math.round(cur/tot*100):0;
-  document.getElementById('progBar').style.width=pct+'%';
-  document.getElementById('progPct').textContent=pct+'%';
-  document.getElementById('progTxt').textContent=`${cur} van ${tot} gecontroleerd…`;
-}
+    .gate-field {
+      position: relative;
+      margin-bottom: .9rem;
+    }
 
-// ── CSV export ─────────────────────────────────────────────────────────────────
-function exportCsv() {
-  const header = 'URL,Status,Coverage,Laatste crawl\n';
-  const rows = resultData.map(r =>
-    `"${r.url}","${r.verdict}","${r.coverage}","${r.lastCrawl}"`
-  ).join('\n');
-  const blob = new Blob([header+rows], {type:'text/csv;charset=utf-8;'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `gsc-inspection-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-}
+    .gate-field input {
+      width: 100%;
+      background: #F2F8F5;
+      border: 1.5px solid #B8DFCE;
+      border-radius: 10px;
+      color: #002C1E;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .88rem;
+      padding: .8rem 2.8rem .8rem 1rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
 
-// ── Toast ──────────────────────────────────────────────────────────────────────
-function toast(type, icon, msg) {
-  const c = document.getElementById('toasts');
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
-  c.appendChild(el); setTimeout(()=>el.remove(),4300);
-}
+    .gate-field input:focus {
+      border-color: #33B784;
+      box-shadow: 0 0 0 3px rgba(51, 183, 132, .13);
+      background: #fff;
+    }
 
-// ── Modal ──────────────────────────────────────────────────────────────────────
-function openModal()  { document.getElementById('overlay').classList.add('open'); }
-function closeModal() { document.getElementById('overlay').classList.remove('open'); }
-function maybeClose(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+    .gate-eye {
+      position: absolute;
+      right: .85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #8AB0A0;
+      padding: 0;
+      display: grid;
+      place-items: center;
+    }
 
-// ── Init ───────────────────────────────────────────────────────────────────────
-refreshQuota(); refreshUI();
-</script>
+    .gate-error {
+      font-size: .75rem;
+      color: #EF4444;
+      font-weight: 600;
+      margin-bottom: .75rem;
+      min-height: 1.1rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .gate-btn {
+      width: 100%;
+      padding: .88rem;
+      background: #00573C;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .9rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: 0 4px 14px rgba(0, 87, 60, .3);
+    }
+
+    .gate-btn:hover {
+      background: #005234;
+      transform: translateY(-1px);
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      20% {
+        transform: translateX(-8px)
+      }
+
+      40% {
+        transform: translateX(8px)
+      }
+
+      60% {
+        transform: translateX(-5px)
+      }
+
+      80% {
+        transform: translateX(5px)
+      }
+    }
+
+    .gate-box.shake {
+      animation: shake .4s ease;
+    }
+
+    :root {
+      --primary: #00573C;
+      --secondary: #33B784;
+      --color-text: #002C1E;
+      --accent: #96D247;
+      --bg: #F2F8F5;
+      --white: #FFFFFF;
+      --border: #D9EFE5;
+      --border2: #B8DFCE;
+      --muted: #527A6A;
+      --subtle: #8AB0A0;
+      --light: #E8F5EE;
+      --amber: #F59E0B;
+      --red: #EF4444;
+      --shadow-sm: 0 1px 3px rgba(0, 87, 60, .08);
+      --shadow: 0 4px 16px rgba(0, 87, 60, .10);
+      --shadow-lg: 0 16px 48px rgba(0, 87, 60, .16);
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--color-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 5rem;
+    }
+
+    /* Bar */
+    .bar {
+      background: var(--primary);
+      padding: .85rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 16px rgba(0, 87, 60, .28);
+    }
+
+    .bar-brand {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+    }
+
+    .bar-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--accent);
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .bar-icon svg {
+      color: var(--primary);
+    }
+
+    .bar-name {
+      font-size: .95rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.02em;
+      line-height: 1.2;
+    }
+
+    .bar-sub {
+      font-size: .68rem;
+      color: rgba(255, 255, 255, .5);
+      font-weight: 500;
+    }
+
+    .help-pill {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      background: rgba(255, 255, 255, .13);
+      border: 1px solid rgba(255, 255, 255, .22);
+      color: #fff;
+      border-radius: 20px;
+      padding: .42rem 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .help-pill:hover {
+      background: rgba(255, 255, 255, .22);
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+    }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .step-n {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: .74rem;
+      font-weight: 800;
+      background: var(--border);
+      color: var(--subtle);
+      flex-shrink: 0;
+      transition: all .3s;
+      border: 2px solid transparent;
+    }
+
+    .step-n.active {
+      background: var(--white);
+      color: var(--primary);
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(51, 183, 132, .15);
+    }
+
+    .step-n.done {
+      background: var(--secondary);
+      color: #fff;
+      border-color: var(--secondary);
+    }
+
+    .step-lbl {
+      font-size: .73rem;
+      font-weight: 700;
+      color: var(--subtle);
+      white-space: nowrap;
+    }
+
+    .step-lbl.active {
+      color: var(--primary);
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+      margin: 0 .6rem;
+      min-width: 20px;
+    }
+
+    .step-line.done {
+      background: var(--secondary);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 1.65rem;
+      margin-bottom: 1.1rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s, border-color .2s;
+    }
+
+    .card:focus-within {
+      box-shadow: var(--shadow);
+      border-color: var(--border2);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1.3rem;
+    }
+
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+
+    .card-ico {
+      width: 40px;
+      height: 40px;
+      background: var(--light);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      color: var(--primary);
+    }
+
+    .card-title {
+      font-size: .97rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .card-desc {
+      font-size: .73rem;
+      color: var(--muted);
+      margin-top: .1rem;
+    }
+
+    .inline-help {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      background: var(--light);
+      border: 1px solid var(--border2);
+      color: var(--primary);
+      border-radius: 8px;
+      padding: .35rem .7rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s;
+      flex-shrink: 0;
+    }
+
+    .inline-help:hover {
+      background: var(--border);
+    }
+
+    /* Tabs */
+    .tab-row {
+      display: flex;
+      gap: .3rem;
+      margin-bottom: 1.1rem;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: .25rem;
+      border: 1.5px solid var(--border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .77rem;
+      font-weight: 700;
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: .45rem .8rem;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .tab-btn.active {
+      background: var(--white);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Fields */
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .72rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .45rem;
+    }
+
+    textarea,
+    input[type=text] {
+      width: 100%;
+      background: var(--bg);
+      border: 1.5px solid var(--border2);
+      border-radius: 10px;
+      color: var(--color-text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem;
+      padding: .8rem 1rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      resize: vertical;
+      line-height: 1.75;
+    }
+
+    textarea {
+      min-height: 130px;
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: var(--secondary);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(51, 183, 132, .13);
+    }
+
+    ::placeholder {
+      color: var(--subtle);
+    }
+
+    .hint {
+      font-size: .7rem;
+      color: var(--subtle);
+      margin-top: .4rem;
+      line-height: 1.6;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Cred pill */
+    .cred-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .35rem .85rem;
+      border-radius: 20px;
+      margin-top: .8rem;
+      font-size: .73rem;
+      font-weight: 700;
+      background: var(--bg);
+      color: var(--muted);
+      border: 1.5px solid var(--border2);
+      transition: all .3s;
+    }
+
+    .cred-pill.ok {
+      background: #ECFDF5;
+      color: #065F46;
+      border-color: #6EE7B7;
+    }
+
+    .cred-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--subtle);
+      transition: all .3s;
+      flex-shrink: 0;
+    }
+
+    .cred-pill.ok .cred-dot {
+      background: #10B981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, .2);
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .7rem;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: .9rem .75rem;
+      text-align: center;
+      transition: border-color .2s;
+    }
+
+    .stat.hi {
+      border-color: var(--secondary);
+      background: var(--light);
+    }
+
+    .sn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.55rem;
+      font-weight: 500;
+      color: var(--color-text);
+      display: block;
+      line-height: 1;
+    }
+
+    .sn.g {
+      color: var(--primary);
+    }
+
+    .sn.a {
+      color: var(--amber);
+    }
+
+    .sl {
+      font-size: .66rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: .35rem;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    /* Quota */
+    .quota-wrap {
+      margin-bottom: 1.3rem;
+    }
+
+    .quota-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .45rem;
+    }
+
+    .quota-lbl {
+      font-size: .76rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .quota-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .76rem;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .quota-track {
+      height: 7px;
+      background: var(--bg);
+      border: 1.5px solid var(--border2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .quota-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      transition: width .5s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .quota-fill.warn {
+      background: linear-gradient(90deg, #F59E0B, #FCD34D);
+    }
+
+    .quota-fill.danger {
+      background: linear-gradient(90deg, var(--red), #FCA5A5);
+    }
+
+    /* Two-phase progress */
+    .phases {
+      display: none;
+      margin-bottom: 1.2rem;
+    }
+
+    .phases.on {
+      display: block;
+    }
+
+    .phase-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .7rem;
+    }
+
+    .phase-badge {
+      font-size: .68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: .2rem .6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .phase-badge.inspect {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #BFDBFE;
+    }
+
+    .phase-badge.index {
+      background: var(--light);
+      color: var(--primary);
+      border: 1px solid var(--border2);
+    }
+
+    .phase-badge.done {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #6EE7B7;
+    }
+
+    .phase-wrap {
+      flex: 1;
+    }
+
+    .prog-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: .35rem;
+    }
+
+    .prog-lbl {
+      font-size: .73rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .prog-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .73rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .prog-track {
+      height: 7px;
+      background: var(--bg);
+      border: 1.5px solid var(--border2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .prog-bar {
+      height: 100%;
+      border-radius: 99px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
+      transition: width .25s ease;
+    }
+
+    .prog-bar.blue {
+      background: linear-gradient(90deg, #3B82F6, #60A5FA);
+    }
+
+    /* Results */
+    .results-wrap {
+      display: none;
+    }
+
+    .results-wrap.on {
+      display: block;
+    }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .75rem;
+    }
+
+    .results-title {
+      font-size: .72rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      background: var(--light);
+      border: 1.5px solid var(--border2);
+      color: var(--primary);
+      border-radius: 8px;
+      padding: .35rem .75rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .73rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .export-btn:hover {
+      background: var(--border);
+    }
+
+    .result-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .55rem;
+      margin-bottom: 1rem;
+    }
+
+    .rs {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: .65rem .5rem;
+      text-align: center;
+    }
+
+    .rs.green {
+      background: #ECFDF5;
+      border-color: #6EE7B7;
+    }
+
+    .rs.amber {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+    }
+
+    .rs.blue {
+      background: #EFF6FF;
+      border-color: #BFDBFE;
+    }
+
+    .rs.red {
+      background: #FEF2F2;
+      border-color: #FCA5A5;
+    }
+
+    .rs-n {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 500;
+      display: block;
+      line-height: 1;
+    }
+
+    .rs.green .rs-n {
+      color: #065F46;
+    }
+
+    .rs.amber .rs-n {
+      color: #92400E;
+    }
+
+    .rs.blue .rs-n {
+      color: #1D4ED8;
+    }
+
+    .rs.red .rs-n {
+      color: #991B1B;
+    }
+
+    .rs-l {
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-top: .3rem;
+      display: block;
+    }
+
+    .rs.green .rs-l {
+      color: #065F46;
+    }
+
+    .rs.amber .rs-l {
+      color: #92400E;
+    }
+
+    .rs.blue .rs-l {
+      color: #1D4ED8;
+    }
+
+    .rs.red .rs-l {
+      color: #991B1B;
+    }
+
+    .tbl-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .74rem;
+    }
+
+    th {
+      background: var(--bg);
+      padding: .6rem .8rem;
+      text-align: left;
+      font-size: .65rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      border-bottom: 1.5px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: .55rem .8rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      color: var(--color-text);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: var(--bg);
+    }
+
+    .td-url {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .67rem;
+      color: var(--muted);
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .vbadge {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      padding: .2rem .55rem;
+      border-radius: 5px;
+      font-size: .67rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .v-pass {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #6EE7B7;
+    }
+
+    .v-found {
+      background: #FFFBEB;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+
+    .v-unkn {
+      background: #F3F4F6;
+      color: #6B7280;
+      border: 1px solid #D1D5DB;
+    }
+
+    .v-err {
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    .s-ok {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #6EE7B7;
+    }
+
+    .s-sent {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1px solid #BFDBFE;
+    }
+
+    .s-skip {
+      background: #F3F4F6;
+      color: #6B7280;
+      border: 1px solid #D1D5DB;
+    }
+
+    .s-err {
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    .coverage-text {
+      font-size: .7rem;
+      color: var(--muted);
+      max-width: 160px;
+    }
+
+    .crawl-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      color: var(--subtle);
+      white-space: nowrap;
+    }
+
+    /* Button */
+    .btn {
+      width: 100%;
+      padding: .95rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .9rem;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      box-shadow: 0 4px 16px rgba(0, 87, 60, .22);
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #005234;
+      box-shadow: 0 6px 22px rgba(0, 87, 60, .32);
+      transform: translateY(-1px);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      background: var(--border2);
+      color: var(--subtle);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .btn-hint {
+      text-align: center;
+      font-size: .72rem;
+      color: var(--subtle);
+      margin-top: .55rem;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1.5px solid var(--border);
+      margin: 1.25rem 0;
+    }
+
+    /* Callouts */
+    .callout {
+      display: flex;
+      gap: .7rem;
+      align-items: flex-start;
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.1rem;
+      font-size: .78rem;
+      line-height: 1.7;
+    }
+
+    .callout.warn {
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      color: #92400E;
+    }
+
+    .callout.warn strong {
+      color: #78350F;
+    }
+
+    .callout.info {
+      background: var(--light);
+      border: 1.5px solid var(--border2);
+      color: var(--muted);
+    }
+
+    .callout.info strong {
+      color: var(--primary);
+    }
+
+    .callout.danger {
+      background: #FEF2F2;
+      border: 1.5px solid #FCA5A5;
+      color: #991B1B;
+    }
+
+    .callout.danger strong {
+      color: #7F1D1D;
+    }
+
+    .callout-icon {
+      font-size: 1.05rem;
+      flex-shrink: 0;
+      margin-top: .05rem;
+    }
+
+    /* Toast */
+    .toasts {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 300;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: .5rem;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--white);
+      border: 1.5px solid var(--border2);
+      border-radius: 12px;
+      padding: .8rem 1.2rem;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      box-shadow: var(--shadow-lg);
+      animation: tIn .28s ease, tOut .32s ease 3.68s forwards;
+      pointer-events: all;
+      min-width: 250px;
+      max-width: 420px;
+    }
+
+    .toast.s {
+      border-color: #6EE7B7;
+      background: #ECFDF5;
+      color: #065F46;
+    }
+
+    .toast.e {
+      border-color: #FCA5A5;
+      background: #FEF2F2;
+      color: #991B1B;
+    }
+
+    .toast.i {
+      border-color: #FDE68A;
+      background: #FFFBEB;
+      color: #92400E;
+    }
+
+    @keyframes tIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+    }
+
+    @keyframes tOut {
+      to {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+    }
+
+    /* Modal */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 44, 30, .5);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      animation: mIn .32s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    @keyframes mIn {
+      from {
+        opacity: 0;
+        transform: scale(.96) translateY(12px);
+      }
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 1.75rem 1.2rem;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .modal-title-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .modal-ico {
+      width: 44px;
+      height: 44px;
+      background: var(--light);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+    }
+
+    .modal-h {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -.025em;
+    }
+
+    .modal-s {
+      font-size: .73rem;
+      color: var(--muted);
+      margin-top: .1rem;
+      font-weight: 500;
+    }
+
+    .modal-x {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1.5px solid var(--border2);
+      color: var(--muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all .18s;
+    }
+
+    .modal-x:hover {
+      background: var(--border);
+      color: var(--color-text);
+    }
+
+    .modal-body {
+      overflow-y: auto;
+      padding: 1.75rem;
+      flex: 1;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 4px;
+    }
+
+    .modal-intro {
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-intro strong {
+      color: var(--color-text);
+    }
+
+    .gstep {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.65rem;
+    }
+
+    .gstep:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .gn-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .gn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .gl {
+      flex: 1;
+      width: 2px;
+      background: var(--border);
+      margin-top: .4rem;
+    }
+
+    .gstep:last-of-type .gl {
+      display: none;
+    }
+
+    .gc {
+      padding-bottom: .25rem;
+    }
+
+    .gt {
+      font-size: .9rem;
+      font-weight: 800;
+      margin-bottom: .35rem;
+      letter-spacing: -.01em;
+    }
+
+    .gp {
+      font-size: .8rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .gp strong {
+      color: var(--color-text);
+    }
+
+    .gcode {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      background: var(--bg);
+      border: 1.5px solid var(--border2);
+      border-radius: 9px;
+      padding: .65rem 1rem;
+      margin-top: .6rem;
+      color: var(--primary);
+      line-height: 1.9;
+    }
+
+    .gtip {
+      display: flex;
+      gap: .55rem;
+      align-items: flex-start;
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: 10px;
+      padding: .7rem 1rem;
+      margin-top: .65rem;
+      font-size: .77rem;
+      color: #92400E;
+      line-height: 1.65;
+    }
+
+    .gok {
+      display: flex;
+      gap: .55rem;
+      align-items: flex-start;
+      background: #ECFDF5;
+      border: 1.5px solid #6EE7B7;
+      border-radius: 10px;
+      padding: .7rem 1rem;
+      margin-top: .65rem;
+      font-size: .77rem;
+      color: #065F46;
+      line-height: 1.65;
+    }
+
+    .modal-sep {
+      border: none;
+      border-top: 1.5px solid var(--border);
+      margin: 1.75rem 0;
+    }
+
+    .faq-item {
+      margin-bottom: 1rem;
+    }
+
+    .faq-q {
+      font-size: .83rem;
+      font-weight: 800;
+      margin-bottom: .25rem;
+    }
+
+    .faq-a {
+      font-size: .78rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .faq-a strong {
+      color: var(--color-text);
+    }
+
+    .faq-head {
+      font-size: .7rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 1.1rem;
+    }
+
+    .modal-foot {
+      padding: 1rem 1.75rem 1.5rem;
+      border-top: 1.5px solid var(--border);
+    }
+
+    .modal-foot-btn {
+      width: 100%;
+      padding: .82rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .87rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .18s;
+      letter-spacing: -.01em;
+    }
+
+    .modal-foot-btn:hover {
+      background: #005234;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Gate -->
+  <div id="gate">
+    <div class="gate-box" id="gateBox">
+      <div class="gate-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="3" y="11" width="18" height="11" rx="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+      </div>
+      <div class="gate-title">GSC Index Tool</div>
+      <div class="gate-sub">Beveiligde tool.<br>Voer het wachtwoord in om verder te gaan.</div>
+      <div class="gate-field">
+        <input type="password" id="pwInput" placeholder="Wachtwoord" onkeydown="if(event.key==='Enter')checkPw()">
+        <button class="gate-eye" onclick="togglePw()">
+          <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
+      </div>
+      <div class="gate-error" id="gateErr"></div>
+      <button class="gate-btn" onclick="checkPw()">Toegang →</button>
+    </div>
+  </div>
+
+  <!-- Bar -->
+  <div class="bar">
+    <div class="bar-brand">
+      <div class="bar-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+      </div>
+      <div>
+        <div class="bar-name">GSC Index Tool</div>
+        <div class="bar-sub">Inspect + Submit · Google Search Console</div>
+      </div>
+    </div>
+    <button class="help-pill" onclick="openModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <path d="M12 17h.01" />
+      </svg>
+      Hoe werkt dit?
+    </button>
+  </div>
+
+  <div class="page">
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step">
+        <div class="step-n active" id="sn1">1</div><span class="step-lbl active">Credentials</span>
+      </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step">
+        <div class="step-n" id="sn2">2</div><span class="step-lbl">Website &amp; URL's</span>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step">
+        <div class="step-n" id="sn3">3</div><span class="step-lbl">Inspecteren &amp; indienen</span>
+      </div>
+    </div>
+
+    <!-- Card 1: Credentials -->
+    <div class="card">
+      <div class="card-top">
+        <div class="card-left">
+          <div class="card-ico">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">API Credentials</div>
+            <div class="card-desc">Service Account met toegang tot Search Console én Indexing API</div>
+          </div>
+        </div>
+        <button class="inline-help" onclick="openModal()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+            <path d="M12 17h.01" />
+          </svg>
+          Hulp nodig?
+        </button>
+      </div>
+      <div class="tab-row">
+        <button class="tab-btn active" id="tabJ" onclick="switchTab('json')">JSON Key plakken</button>
+        <button class="tab-btn" id="tabM" onclick="switchTab('manual')">Handmatig invoeren</button>
+      </div>
+      <div id="paneJ">
+        <div class="field">
+          <label>Service Account JSON</label>
+          <textarea id="jsonIn"
+            placeholder='{"type":"service_account","project_id":"...","private_key":"-----BEGIN RSA PRIVATE KEY-----\n...","client_email":"...@....iam.gserviceaccount.com",...}'
+            oninput="parseJson()"></textarea>
+          <div class="hint">📋 Kopieer de volledige inhoud van je .json sleutelbestand</div>
+        </div>
+      </div>
+      <div id="paneM" style="display:none;">
+        <div class="field">
+          <label>Client Email</label>
+          <input type="text" id="mEmail" placeholder="naam@project.iam.gserviceaccount.com" oninput="validateManual()">
+        </div>
+        <div class="field">
+          <label>Private Key (PEM)</label>
+          <textarea id="mKey" rows="5"
+            placeholder="-----BEGIN RSA PRIVATE KEY-----&#10;...&#10;-----END RSA PRIVATE KEY-----"
+            oninput="validateManual()"></textarea>
+        </div>
+      </div>
+      <div class="cred-pill" id="credPill">
+        <div class="cred-dot"></div>Nog geen credentials geladen
+      </div>
+    </div>
+
+    <!-- Card 2: Site + URLs -->
+    <div class="card">
+      <div class="card-top">
+        <div class="card-left">
+          <div class="card-ico">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Website &amp; URL's</div>
+            <div class="card-desc">GSC property + de URL's die je wilt inspecteren en indienen</div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>GSC Property URL</label>
+        <input type="text" id="siteUrl" placeholder="https://www.jouwsite.nl/" oninput="refreshUI()">
+        <div class="hint">⚠ Exact kopiëren uit Search Console, inclusief trailing slash. Domain property:
+          <strong>sc-domain:jouwsite.nl</strong>
+        </div>
+      </div>
+      <div class="field">
+        <label>URL's om te verwerken</label>
+        <textarea id="urlIn" placeholder="https://www.jouwsite.nl/pagina-1&#10;https://www.jouwsite.nl/pagina-2"
+          oninput="analyzeUrls()"></textarea>
+        <div class="hint">Eén URL per regel · Dubbelen worden automatisch gefilterd</div>
+      </div>
+      <div class="stats" id="statsBar" style="display:none;">
+        <div class="stat"><span class="sn" id="stTotal">0</span><span class="sl">Ingevoerd</span></div>
+        <div class="stat hi"><span class="sn g" id="stUnique">0</span><span class="sl">Uniek &amp; geldig</span></div>
+        <div class="stat"><span class="sn a" id="stDupe">0</span><span class="sl">Dubbel / ongeldig</span></div>
+      </div>
+    </div>
+
+    <!-- Card 3: Run -->
+    <div class="card">
+      <div class="card-top">
+        <div class="card-left">
+          <div class="card-ico">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+          </div>
+          <div>
+            <div class="card-title">Inspecteren &amp; indienen</div>
+            <div class="card-desc">Fase 1: status ophalen · Fase 2: alle URL's indienen bij Google</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quota's -->
+      <div class="quota-wrap">
+        <div class="quota-row">
+          <span class="quota-lbl">🔍 Inspection API (dagelijks)</span>
+          <span class="quota-val" id="quotaInspNum">0 / 2.000</span>
+        </div>
+        <div class="quota-track">
+          <div class="quota-fill" id="quotaInspFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="quota-wrap">
+        <div class="quota-row">
+          <span class="quota-lbl">📤 Indexing API (dagelijks)</span>
+          <span class="quota-val" id="quotaIdxNum">0 / 200</span>
+        </div>
+        <div class="quota-track">
+          <div class="quota-fill" id="quotaIdxFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Two-phase progress -->
+      <div class="phases" id="phases">
+        <div class="phase-row">
+          <span class="phase-badge inspect" id="badge1">Fase 1</span>
+          <div class="phase-wrap">
+            <div class="prog-top">
+              <span class="prog-lbl" id="prog1Txt">Indexeringsstatus ophalen…</span>
+              <span class="prog-pct" id="prog1Pct">0%</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-bar blue" id="prog1Bar"></div>
+            </div>
+          </div>
+        </div>
+        <div class="phase-row">
+          <span class="phase-badge index" id="badge2">Fase 2</span>
+          <div class="phase-wrap">
+            <div class="prog-top">
+              <span class="prog-lbl" id="prog2Txt">Wacht op fase 1…</span>
+              <span class="prog-pct" id="prog2Pct">—</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-bar" id="prog2Bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="results-wrap" id="resultsWrap">
+        <hr class="divider" style="margin-top:0;">
+        <div class="results-header">
+          <div class="results-title">Resultaten</div>
+          <button class="export-btn" onclick="exportCsv()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Exporteer CSV
+          </button>
+        </div>
+        <div class="result-summary">
+          <div class="rs green"><span class="rs-n" id="rAlready">0</span><span class="rs-l">Al geïndexeerd</span></div>
+          <div class="rs blue"> <span class="rs-n" id="rSent">0</span> <span class="rs-l">Ingediend ✓</span></div>
+          <div class="rs amber"><span class="rs-n" id="rSkip">0</span> <span class="rs-l">Limiet bereikt</span></div>
+          <div class="rs red"> <span class="rs-n" id="rErr">0</span> <span class="rs-l">Fout</span></div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>GSC Status</th>
+                <th>URL</th>
+                <th>Coverage</th>
+                <th>Indienen</th>
+                <th>Laatste crawl</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTbody"></tbody>
+          </table>
+        </div>
+        <hr class="divider">
+      </div>
+
+      <button class="btn" id="submitBtn" onclick="runAll()" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="5 3 19 12 5 21 5 3" />
+        </svg>
+        Inspecteren &amp; indienen bij Google
+      </button>
+      <div class="btn-hint" id="btnHint">Doorloop stap 1 en 2 om door te gaan</div>
+    </div>
+
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" onclick="maybeClose(event)">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title-row">
+          <div class="modal-ico">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <path d="M12 17h.01" />
+            </svg>
+          </div>
+          <div>
+            <div class="modal-h">Setup gids &amp; veelgestelde vragen</div>
+            <div class="modal-s">Google Search Console · Inspection + Indexing API</div>
+          </div>
+        </div>
+        <button class="modal-x" onclick="closeModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <p class="modal-intro">Deze tool combineert twee Google APIs. <strong>Fase 1</strong> inspecteert de huidige
+          indexeringsstatus via de URL Inspection API. <strong>Fase 2</strong> dient alle URL's in via de Indexing API
+          om Google te vragen ze te (re)crawlen.</p>
+
+        <div class="gstep">
+          <div class="gn-col">
+            <div class="gn">1</div>
+            <div class="gl"></div>
+          </div>
+          <div class="gc">
+            <div class="gt">Google Cloud Project + beide APIs inschakelen</div>
+            <p class="gp">Maak een project aan op <strong>console.cloud.google.com</strong>. Schakel vervolgens
+              <strong>twee</strong> APIs in via Bibliotheek:
+            </p>
+            <div class="gcode">1. "Google Search Console API" → voor inspecteren<br>2. "Web Search Indexing API" → voor
+              indienen</div>
+          </div>
+        </div>
+
+        <div class="gstep">
+          <div class="gn-col">
+            <div class="gn">2</div>
+            <div class="gl"></div>
+          </div>
+          <div class="gc">
+            <div class="gt">Service Account aanmaken + JSON downloaden</div>
+            <p class="gp">Ga naar <strong>Inloggegevens → Service-account aanmaken</strong>. Download daarna een JSON
+              sleutelbestand via <strong>Sleutels → Sleutel toevoegen → JSON</strong>.</p>
+            <div class="gtip"><span>🔒</span><span>Bewaar dit bestand veilig — het geeft volledige API-toegang.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="gstep">
+          <div class="gn-col">
+            <div class="gn">3</div>
+            <div class="gl"></div>
+          </div>
+          <div class="gc">
+            <div class="gt">Service Account toevoegen als Eigenaar in GSC</div>
+            <p class="gp">Ga naar Search Console → je property → <strong>Instellingen → Gebruikers → Gebruiker
+                toevoegen</strong>. Vul het service account e-mailadres in en geef de rol <strong>Eigenaar</strong>.</p>
+            <div class="gcode">📧 naam@project.iam.gserviceaccount.com<br>🔑 Rol: Eigenaar (verplicht voor beide APIs)
+            </div>
+          </div>
+        </div>
+
+        <div class="gstep">
+          <div class="gn-col">
+            <div class="gn">4</div>
+            <div class="gl"></div>
+          </div>
+          <div class="gc">
+            <div class="gt">Site URL correct invullen</div>
+            <p class="gp">Kopieer de property URL letterlijk uit Search Console, inclusief trailing slash.</p>
+            <div class="gcode">URL-prefix: https://www.jouwsite.nl/<br>Domain: sc-domain:jouwsite.nl</div>
+          </div>
+        </div>
+
+        <hr class="modal-sep">
+        <div class="faq-head">Kan ik een ban of penalty krijgen?</div>
+
+        <div class="faq-item">
+          <div class="faq-q">🔍 URL Inspection API — volledig veilig</div>
+          <div class="faq-a">De Inspection API is door Google gebouwd voor precies dit gebruik: bulk-inzicht in
+            indexeringsstatus voor jouw eigen property. Lezen geeft nooit een penalty. Geen enkel risico.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">📤 Indexing API — veilig, maar met nuance</div>
+          <div class="faq-a">Google geeft een <strong>HTTP 200</strong> terug op elk verzoek — ook voor reguliere
+            pagina's. Er is geen technische beperking die het blokkeert. De API is officieel bedoeld voor JobPosting en
+            BroadcastEvent pagina's, maar er staat geen straf op het gebruik voor andere pagina's. Google kan het
+            signaal simpelweg negeren of lager prioriteren. Een ban of penalty krijg je hier <strong>niet</strong> van —
+            dat zijn sancties voor manipulatie van zoekresultaten (spam, cloaking, gekochte links), niet voor
+            API-gebruik voor je eigen site.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Wat als Google de Indexing API verzoeken negeert?</div>
+          <div class="faq-a">Dan verandert er niets — je bent precies waar je was. Het slechtste wat kan gebeuren is dat
+            het niet werkt. De beste uitkomst is dat Google de pagina's prioriteit geeft in de crawlwachtrij. Voor
+            pagina's die <strong>"Onbekend bij Google"</strong> zijn, helpt de Indexing API weinig: die pagina's zijn
+            niet vindbaar via interne links of een sitemap. Die moet je eerst toegankelijk maken.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">Wat zijn de quota's?</div>
+          <div class="faq-a"><strong>Inspection API:</strong> 2.000 verzoeken per dag per property. <strong>Indexing
+              API:</strong> 200 verzoeken per dag (standaard). Als je meer nodig hebt, kun je bij Google een
+            quota-uitbreiding aanvragen via de Google Cloud Console.</div>
+        </div>
+
+      </div>
+      <div class="modal-foot">
+        <button class="modal-foot-btn" onclick="closeModal()">Sluiten en aan de slag →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Gate ─────────────────────────────────────────────────────────────────────
+    const PW = 'Onlineklik2012', SK = 'gsc_auth3';
+    function checkPw() {
+      if (document.getElementById('pwInput').value === PW) {
+        sessionStorage.setItem(SK, '1');
+        document.getElementById('gate').classList.add('hidden');
+      } else {
+        const b = document.getElementById('gateBox');
+        document.getElementById('gateErr').textContent = 'Onjuist wachtwoord — probeer opnieuw';
+        b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+        document.getElementById('pwInput').value = ''; document.getElementById('pwInput').focus();
+      }
+    }
+    function togglePw() {
+      const i = document.getElementById('pwInput'), s = i.type === 'text';
+      i.type = s ? 'password' : 'text';
+      document.getElementById('eyeIcon').innerHTML = s
+        ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+        : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    }
+    if (sessionStorage.getItem(SK) === '1') document.getElementById('gate').classList.add('hidden');
+    else setTimeout(() => document.getElementById('pwInput').focus(), 100);
+
+    // ── State ─────────────────────────────────────────────────────────────────────
+    let creds = null, urls = [], tab = 'json', running = false, resultData = [];
+    const QINSP_KEY = 'gsc_q_insp2', QIDX_KEY = 'gsc_q_idx2';
+    const QINSP_MAX = 2000, QIDX_MAX = 200;
+
+    // ── Quota ─────────────────────────────────────────────────────────────────────
+    function getQ(key) {
+      const today = new Date().toISOString().slice(0, 10);
+      try { const q = JSON.parse(localStorage.getItem(key) || '{}'); return q.date === today ? q : { date: today, used: 0 }; }
+      catch { return { date: new Date().toISOString().slice(0, 10), used: 0 }; }
+    }
+    function saveQ(key, q) { localStorage.setItem(key, JSON.stringify(q)); }
+    function refreshQuotas() {
+      const qi = getQ(QINSP_KEY), qx = getQ(QIDX_KEY);
+      const pi = Math.min(qi.used / QINSP_MAX * 100, 100), px = Math.min(qx.used / QIDX_MAX * 100, 100);
+      document.getElementById('quotaInspNum').textContent = `${qi.used.toLocaleString('nl-NL')} / 2.000`;
+      document.getElementById('quotaIdxNum').textContent = `${qx.used.toLocaleString('nl-NL')} / 200`;
+      const fi = document.getElementById('quotaInspFill'); fi.style.width = pi + '%'; fi.className = 'quota-fill' + (pi >= 90 ? ' danger' : pi >= 65 ? ' warn' : '');
+      const fx = document.getElementById('quotaIdxFill'); fx.style.width = px + '%'; fx.className = 'quota-fill' + (px >= 90 ? ' danger' : px >= 65 ? ' warn' : '');
+    }
+
+    // ── Steps ─────────────────────────────────────────────────────────────────────
+    function refreshSteps() {
+      const c = !!creds, u = urls.length > 0, s = !!document.getElementById('siteUrl').value.trim();
+      document.getElementById('sn1').className = 'step-n ' + (c ? 'done' : 'active');
+      document.getElementById('sl1').className = 'step-line ' + (c ? 'done' : '');
+      document.getElementById('sn2').className = 'step-n ' + (c && u && s ? 'done' : c ? 'active' : '');
+      document.getElementById('sl2').className = 'step-line ' + (c && u && s ? 'done' : '');
+      document.getElementById('sn3').className = 'step-n ' + (c && u && s ? 'active' : '');
+    }
+
+    // ── Credentials ───────────────────────────────────────────────────────────────
+    function switchTab(t) {
+      tab = t;
+      document.getElementById('tabJ').className = 'tab-btn' + (t === 'json' ? ' active' : '');
+      document.getElementById('tabM').className = 'tab-btn' + (t === 'manual' ? ' active' : '');
+      document.getElementById('paneJ').style.display = t === 'json' ? '' : 'none';
+      document.getElementById('paneM').style.display = t === 'manual' ? '' : 'none';
+      creds = null; setPill(false); refreshUI();
+    }
+    function setPill(ok, label) {
+      const el = document.getElementById('credPill');
+      el.className = 'cred-pill' + (ok ? ' ok' : '');
+      el.innerHTML = `<div class="cred-dot"></div>${ok ? '✓ Geldig — ' + label : (label || 'Nog geen credentials geladen')}`;
+    }
+    function parseJson() {
+      const raw = document.getElementById('jsonIn').value.trim();
+      if (!raw) { creds = null; setPill(false); refreshUI(); return; }
+      try {
+        const j = JSON.parse(raw);
+        if (!j.client_email || !j.private_key) { creds = null; setPill(false, 'JSON mist client_email of private_key'); refreshUI(); return; }
+        creds = { email: j.client_email, key: j.private_key }; setPill(true, j.client_email); refreshUI();
+      } catch { creds = null; setPill(false, 'Ongeldige JSON'); refreshUI(); }
+    }
+    function validateManual() {
+      const email = document.getElementById('mEmail').value.trim(), key = document.getElementById('mKey').value.trim();
+      if (!email || !key) { creds = null; setPill(false); refreshUI(); return; }
+      if (!email.includes('@') || !key.includes('PRIVATE KEY')) { creds = null; setPill(false, 'Email of key klopt niet'); refreshUI(); return; }
+      creds = { email, key }; setPill(true, email); refreshUI();
+    }
+
+    // ── URLs ──────────────────────────────────────────────────────────────────────
+    function analyzeUrls() {
+      const raw = document.getElementById('urlIn').value;
+      if (!raw.trim()) { urls = []; document.getElementById('statsBar').style.display = 'none'; refreshUI(); return; }
+      const parts = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+      const valid = parts.filter(u => { try { new URL(u); return u.startsWith('http'); } catch { return false; } });
+      const seen = new Set(); let dupes = 0; urls = [];
+      valid.forEach(u => { const n = u.toLowerCase().replace(/\/$/, ''); if (seen.has(n)) dupes++; else { seen.add(n); urls.push(u); } });
+      document.getElementById('stTotal').textContent = parts.length;
+      document.getElementById('stUnique').textContent = urls.length;
+      document.getElementById('stDupe').textContent = dupes + (parts.length - valid.length);
+      document.getElementById('statsBar').style.display = '';
+      refreshUI();
+    }
+
+    // ── UI ────────────────────────────────────────────────────────────────────────
+    function refreshUI() {
+      refreshSteps(); refreshQuotas();
+      const btn = document.getElementById('submitBtn'), hint = document.getElementById('btnHint');
+      const site = document.getElementById('siteUrl').value.trim();
+      const qi = getQ(QINSP_KEY), qx = getQ(QIDX_KEY);
+      if (!creds) { btn.disabled = true; hint.textContent = '↑ Voer eerst je API credentials in (stap 1)'; return; }
+      if (!site) { btn.disabled = true; hint.textContent = '↑ Voer de GSC property URL in (stap 2)'; return; }
+      if (!urls.length) { btn.disabled = true; hint.textContent = "↑ Voer URL's in (stap 2)"; return; }
+      if (qi.used >= QINSP_MAX) { btn.disabled = true; hint.textContent = '⚠ Inspection API daglimiet (2.000) bereikt'; return; }
+      if (running) { btn.disabled = true; hint.textContent = 'Bezig…'; return; }
+      const n = Math.min(urls.length, QINSP_MAX - qi.used);
+      const canIdx = Math.min(n, QIDX_MAX - qx.used);
+      btn.disabled = false;
+      hint.textContent = `Inspecteert ${n} URL's · daarna ${canIdx} indienen bij Indexing API`;
+    }
+
+    // ── JWT / OAuth ───────────────────────────────────────────────────────────────
+    const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    async function pemToKey(pem) {
+      const b64 = pem.replace(/-----[^-]+-----/g, '').replace(/\s+/g, '');
+      const bin = atob(b64); const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++)bytes[i] = bin.charCodeAt(i);
+      return crypto.subtle.importKey('pkcs8', bytes.buffer, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign']);
+    }
+    async function getToken(scope) {
+      const enc = s => b64u(new TextEncoder().encode(JSON.stringify(s)));
+      const now = Math.floor(Date.now() / 1000);
+      const h = enc({ alg: 'RS256', typ: 'JWT' });
+      const c = enc({ iss: creds.email, scope, aud: 'https://oauth2.googleapis.com/token', exp: now + 3600, iat: now });
+      const inp = `${h}.${c}`;
+      const key = await pemToKey(creds.key);
+      const sig = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(inp));
+      const jwt = `${inp}.${b64u(sig)}`;
+      const res = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: jwt })
+      });
+      const d = await res.json();
+      if (!d.access_token) throw new Error(d.error_description || 'Token mislukt');
+      return d.access_token;
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────────
+    const coverageLabels = {
+      'Submitted and indexed': 'Ingediend en geïndexeerd',
+      'Indexed, not submitted in sitemap': 'Geïndexeerd (niet in sitemap)',
+      'Crawled - currently not indexed': 'Gecrawld — nog niet geïndexeerd',
+      'Discovered - currently not indexed': 'Gevonden — nog niet geïndexeerd',
+      'URL is unknown to Google': 'Onbekend bij Google',
+      "Excluded by 'noindex' tag": 'Uitgesloten door noindex',
+      'Blocked by robots.txt': 'Geblokkeerd door robots.txt',
+      'Page with redirect': 'Redirect',
+      'Alternate page with proper canonical tag': 'Alternatief (canonical)',
+      'Duplicate without user-selected canonical': 'Duplicaat zonder canonical',
+    };
+    function xlate(s) { return coverageLabels[s] || s || '—'; }
+    function fmtDate(iso) { if (!iso) return '—'; try { return new Date(iso).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch { return iso; } }
+
+    function inspBadge(verdict) {
+      if (verdict === 'PASS') return '<span class="vbadge v-pass">✓ Geïndexeerd</span>';
+      if (verdict === 'FAIL') return '<span class="vbadge v-found">⚠ Niet geïndexeerd</span>';
+      if (verdict === 'NEUTRAL') return '<span class="vbadge v-unkn">? Onbekend</span>';
+      return '<span class="vbadge v-err">✗ Fout</span>';
+    }
+    function idxBadge(s) {
+      if (s === 'sent') return '<span class="vbadge s-sent">📤 Ingediend</span>';
+      if (s === 'already') return '<span class="vbadge s-ok">✓ Was al geïndexeerd</span>';
+      if (s === 'skip') return '<span class="vbadge s-skip">— Limiet</span>';
+      if (s === 'err') return '<span class="vbadge s-err">✗ Fout</span>';
+      return '';
+    }
+
+    // ── Progress helpers ──────────────────────────────────────────────────────────
+    function setP1(cur, tot) {
+      const pct = tot > 0 ? Math.round(cur / tot * 100) : 0;
+      document.getElementById('prog1Bar').style.width = pct + '%';
+      document.getElementById('prog1Pct').textContent = pct + '%';
+      document.getElementById('prog1Txt').textContent = `Fase 1: ${cur}/${tot} geïnspecteerd`;
+    }
+    function setP2(cur, tot, label) {
+      document.getElementById('prog2Pct').textContent = tot > 0 ? Math.round(cur / tot * 100) + '%' : '—';
+      document.getElementById('prog2Bar').style.width = (tot > 0 ? Math.round(cur / tot * 100) : 0) + '%';
+      document.getElementById('prog2Txt').textContent = label || `Fase 2: ${cur}/${tot} ingediend`;
+    }
+
+    // ── Main flow ─────────────────────────────────────────────────────────────────
+    async function runAll() {
+      if (running) return;
+      running = true; refreshUI();
+
+      const siteUrl = document.getElementById('siteUrl').value.trim();
+      const qi = getQ(QINSP_KEY), qx = getQ(QIDX_KEY);
+      const inspBatch = urls.slice(0, QINSP_MAX - qi.used);
+
+      document.getElementById('phases').classList.add('on');
+      document.getElementById('resultsWrap').classList.remove('on');
+      document.getElementById('resultsTbody').innerHTML = '';
+      resultData = [];
+
+      setP1(0, inspBatch.length);
+      setP2(0, 0, 'Wacht op fase 1…');
+
+      toast('i', '🔍', `Fase 1: ${inspBatch.length} URL's inspecteren…`);
+
+      // ── FASE 1: Inspection ────────────────────────────────────────────────────
+      let inspToken;
+      try {
+        inspToken = await getToken('https://www.googleapis.com/auth/webmasters.readonly');
+      } catch (e) {
+        toast('e', '❌', 'Authenticatie mislukt: ' + e.message); running = false; refreshUI(); return;
+      }
+
+      const rows = [];
+      for (let i = 0; i < inspBatch.length; i++) {
+        const url = inspBatch[i]; setP1(i, inspBatch.length);
+        let verdict = 'ERROR', coverage = '', lastCrawl = '';
+        try {
+          const res = await fetch('https://searchconsole.googleapis.com/v1/urlInspection/index:inspect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + inspToken },
+            body: JSON.stringify({ inspectionUrl: url, siteUrl })
+          });
+          const d = await res.json();
+          if (res.ok && d.inspectionResult) {
+            const r = d.inspectionResult.indexStatusResult || {};
+            verdict = r.verdict || 'NEUTRAL';
+            coverage = xlate(r.coverageState || '');
+            lastCrawl = fmtDate(r.lastCrawlTime);
+          } else {
+            coverage = d.error?.message || `HTTP ${res.status}`;
+          }
+        } catch (e) { coverage = 'Netwerkfout'; }
+        rows.push({ url, verdict, coverage, lastCrawl, idxStatus: 'pending' });
+        if (i < inspBatch.length - 1) await new Promise(r => setTimeout(r, 120));
+      }
+
+      qi.used += inspBatch.length; saveQ(QINSP_KEY, qi); refreshQuotas();
+      setP1(inspBatch.length, inspBatch.length);
+      document.getElementById('badge1').className = 'phase-badge done';
+      document.getElementById('badge1').textContent = 'Fase 1 ✓';
+
+      toast('i', '📤', `Fase 2: ${Math.min(inspBatch.length, QIDX_MAX - qx.used)} URL's indienen…`);
+
+      // ── FASE 2: Indexing API ──────────────────────────────────────────────────
+      let idxToken;
+      try {
+        idxToken = await getToken('https://www.googleapis.com/auth/indexing');
+      } catch (e) {
+        // Indexing token failed — mark all as skip but still show results
+        rows.forEach(r => { if (r.verdict === 'PASS') r.idxStatus = 'already'; else r.idxStatus = 'err'; });
+        toast('e', '❌', 'Indexing API auth mislukt: ' + e.message);
+        renderResults(rows); running = false; refreshUI(); return;
+      }
+
+      const qxNow = getQ(QIDX_KEY);
+      let idxDone = 0, idxLimit = QIDX_MAX - qxNow.used;
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        setP2(i, rows.length);
+
+        if (row.verdict === 'PASS') {
+          // Already indexed — still submit to trigger recrawl for freshness, counts toward quota
+        }
+
+        if (idxLimit <= 0) {
+          row.idxStatus = 'skip'; continue;
+        }
+
+        try {
+          const res = await fetch('https://indexing.googleapis.com/v3/urlNotifications:publish', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idxToken },
+            body: JSON.stringify({ url: row.url, type: 'URL_UPDATED' })
+          });
+          if (res.ok) {
+            row.idxStatus = row.verdict === 'PASS' ? 'already' : 'sent';
+            idxDone++; idxLimit--;
+          } else {
+            const d = await res.json();
+            row.idxStatus = 'err';
+            row.idxError = d.error?.message || `HTTP ${res.status}`;
+          }
+        } catch (e) { row.idxStatus = 'err'; row.idxError = 'Netwerkfout'; }
+
+        if (i < rows.length - 1) await new Promise(r => setTimeout(r, 200));
+      }
+
+      qxNow.used += idxDone; saveQ(QIDX_KEY, qxNow); refreshQuotas();
+      setP2(rows.length, rows.length, 'Fase 2 klaar');
+      document.getElementById('badge2').className = 'phase-badge done';
+      document.getElementById('badge2').textContent = 'Fase 2 ✓';
+
+      renderResults(rows);
+
+      const sent = rows.filter(r => r.idxStatus === 'sent').length;
+      const already = rows.filter(r => r.idxStatus === 'already').length;
+      const errs = rows.filter(r => r.idxStatus === 'err').length;
+      if (errs === 0) toast('s', '✅', `Klaar! ${sent} ingediend · ${already} waren al geïndexeerd`);
+      else toast('i', '⚠', `${sent} ingediend · ${already} al geïnd · ${errs} fout`);
+
+      running = false; refreshUI();
+    }
+
+    function renderResults(rows) {
+      resultData = rows;
+      const tbody = document.getElementById('resultsTbody');
+      tbody.innerHTML = '';
+      let cAlready = 0, cSent = 0, cSkip = 0, cErr = 0;
+      rows.forEach(row => {
+        if (row.idxStatus === 'already') cAlready++;
+        else if (row.idxStatus === 'sent') cSent++;
+        else if (row.idxStatus === 'skip') cSkip++;
+        else if (row.idxStatus === 'err') cErr++;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+      <td>${inspBadge(row.verdict)}</td>
+      <td><div class="td-url" title="${row.url}">${row.url}</div></td>
+      <td><span class="coverage-text">${row.coverage}</span></td>
+      <td>${idxBadge(row.idxStatus)}${row.idxError ? `<div style="font-size:.64rem;color:#EF4444;margin-top:.2rem;">${row.idxError}</div>` : ''}</td>
+      <td><span class="crawl-date">${row.lastCrawl}</span></td>`;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('rAlready').textContent = cAlready;
+      document.getElementById('rSent').textContent = cSent;
+      document.getElementById('rSkip').textContent = cSkip;
+      document.getElementById('rErr').textContent = cErr;
+      document.getElementById('resultsWrap').classList.add('on');
+    }
+
+    // ── CSV export ────────────────────────────────────────────────────────────────
+    function exportCsv() {
+      const h = 'URL,GSC Status,Coverage,Indienen,Laatste crawl\n';
+      const r = resultData.map(r => `"${r.url}","${r.verdict}","${r.coverage}","${r.idxStatus}","${r.lastCrawl}"`).join('\n');
+      const blob = new Blob([h + r], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `gsc-results-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    }
+
+    // ── Toast ─────────────────────────────────────────────────────────────────────
+    function toast(type, icon, msg) {
+      const c = document.getElementById('toasts');
+      const el = document.createElement('div'); el.className = `toast ${type}`;
+      el.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+      c.appendChild(el); setTimeout(() => el.remove(), 4300);
+    }
+
+    // ── Modal ─────────────────────────────────────────────────────────────────────
+    function openModal() { document.getElementById('overlay').classList.add('open'); }
+    function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+    function maybeClose(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Init ──────────────────────────────────────────────────────────────────────
+    refreshQuotas(); refreshUI();
+  </script>
 </body>
+
 </html>
