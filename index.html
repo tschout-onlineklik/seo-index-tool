@@ -20,7 +20,7 @@
       padding: 0;
     }
 
-    /* Gate */
+    /* ── Gate ── */
     #gate {
       position: fixed;
       inset: 0;
@@ -178,10 +178,10 @@
     :root {
       --primary: #00573C;
       --secondary: #33B784;
-      --color-text: #002C1E;
+      --text: #002C1E;
       --accent: #96D247;
       --bg: #F2F8F5;
-      --white: #FFFFFF;
+      --white: #fff;
       --border: #D9EFE5;
       --border2: #B8DFCE;
       --muted: #527A6A;
@@ -201,13 +201,13 @@
 
     body {
       background: var(--bg);
-      color: var(--color-text);
+      color: var(--text);
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       padding-bottom: 5rem;
     }
 
-    /* Bar */
+    /* ── Bar ── */
     .bar {
       background: var(--primary);
       padding: .85rem 1.75rem;
@@ -275,12 +275,12 @@
     }
 
     .page {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       padding: 2rem 1.25rem;
     }
 
-    /* Steps */
+    /* ── Steps ── */
     .steps {
       display: flex;
       align-items: center;
@@ -344,7 +344,7 @@
       background: var(--secondary);
     }
 
-    /* Cards */
+    /* ── Cards ── */
     .card {
       background: var(--white);
       border: 1.5px solid var(--border);
@@ -417,7 +417,7 @@
       background: var(--border);
     }
 
-    /* Tabs */
+    /* ── Tabs ── */
     .tab-row {
       display: flex;
       gap: .3rem;
@@ -448,7 +448,7 @@
       box-shadow: var(--shadow-sm);
     }
 
-    /* Fields */
+    /* ── Fields ── */
     .field {
       margin-bottom: 1rem;
     }
@@ -475,7 +475,7 @@
       background: var(--bg);
       border: 1.5px solid var(--border2);
       border-radius: 10px;
-      color: var(--color-text);
+      color: var(--text);
       font-family: 'JetBrains Mono', monospace;
       font-size: .78rem;
       padding: .8rem 1rem;
@@ -508,7 +508,7 @@
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Cred pill */
+    /* ── Cred pill ── */
     .cred-pill {
       display: inline-flex;
       align-items: center;
@@ -544,7 +544,7 @@
       box-shadow: 0 0 0 3px rgba(16, 185, 129, .2);
     }
 
-    /* Stats */
+    /* ── URL stats ── */
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -558,7 +558,6 @@
       border-radius: 12px;
       padding: .9rem .75rem;
       text-align: center;
-      transition: border-color .2s;
     }
 
     .stat.hi {
@@ -570,7 +569,7 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.55rem;
       font-weight: 500;
-      color: var(--color-text);
+      color: var(--text);
       display: block;
       line-height: 1;
     }
@@ -593,33 +592,69 @@
       letter-spacing: .05em;
     }
 
-    /* Quota */
+    /* ── Submitted-on date field ── */
+    .date-field-wrap {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-top: .75rem;
+    }
+
+    .date-field-wrap label {
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .date-input {
+      background: var(--bg);
+      border: 1.5px solid var(--border2);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem;
+      padding: .6rem .85rem;
+      outline: none;
+      transition: border-color .2s;
+      width: auto;
+    }
+
+    .date-input:focus {
+      border-color: var(--secondary);
+    }
+
+    .date-hint {
+      font-size: .7rem;
+      color: var(--subtle);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Quota ── */
     .quota-wrap {
-      margin-bottom: 1.3rem;
+      margin-bottom: 1rem;
     }
 
     .quota-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: .45rem;
+      margin-bottom: .4rem;
     }
 
     .quota-lbl {
-      font-size: .76rem;
+      font-size: .74rem;
       font-weight: 700;
       color: var(--muted);
     }
 
     .quota-val {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .76rem;
+      font-size: .74rem;
       font-weight: 500;
-      color: var(--color-text);
+      color: var(--text);
     }
 
     .quota-track {
-      height: 7px;
+      height: 6px;
       background: var(--bg);
       border: 1.5px solid var(--border2);
       border-radius: 99px;
@@ -630,7 +665,7 @@
       height: 100%;
       border-radius: 99px;
       background: linear-gradient(90deg, var(--secondary), var(--accent));
-      transition: width .5s cubic-bezier(.4, 0, .2, 1);
+      transition: width .5s;
     }
 
     .quota-fill.warn {
@@ -641,7 +676,7 @@
       background: linear-gradient(90deg, var(--red), #FCA5A5);
     }
 
-    /* Two-phase progress */
+    /* ── Two-phase progress ── */
     .phases {
       display: none;
       margin-bottom: 1.2rem;
@@ -651,22 +686,75 @@
       display: block;
     }
 
+    /* ── Mode switcher ── */
+    .mode-switch {
+      display: flex;
+      gap: .3rem;
+      margin-bottom: 1.3rem;
+      background: var(--bg);
+      border-radius: 12px;
+      padding: .3rem;
+      border: 1.5px solid var(--border);
+    }
+
+    .mode-btn {
+      flex: 1;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 700;
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: .55rem .8rem;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+    }
+
+    .mode-btn.active {
+      background: var(--white);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mode-btn.active.submit-mode {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .mode-note {
+      font-size: .72rem;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      padding: .6rem .9rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
     .phase-row {
       display: flex;
       align-items: center;
       gap: .75rem;
-      margin-bottom: .7rem;
+      margin-bottom: .65rem;
     }
 
     .phase-badge {
-      font-size: .68rem;
+      font-size: .67rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: .05em;
+      letter-spacing: .04em;
       padding: .2rem .6rem;
       border-radius: 6px;
       white-space: nowrap;
       flex-shrink: 0;
+      min-width: 72px;
+      text-align: center;
     }
 
     .phase-badge.inspect {
@@ -694,24 +782,23 @@
     .prog-top {
       display: flex;
       justify-content: space-between;
-      margin-bottom: .35rem;
+      margin-bottom: .3rem;
     }
 
     .prog-lbl {
-      font-size: .73rem;
+      font-size: .72rem;
       font-weight: 700;
       color: var(--muted);
     }
 
     .prog-pct {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .73rem;
-      font-weight: 500;
+      font-size: .72rem;
       color: var(--primary);
     }
 
     .prog-track {
-      height: 7px;
+      height: 6px;
       background: var(--bg);
       border: 1.5px solid var(--border2);
       border-radius: 99px;
@@ -723,141 +810,178 @@
       border-radius: 99px;
       width: 0%;
       background: linear-gradient(90deg, var(--secondary), var(--accent));
-      transition: width .25s ease;
+      transition: width .25s;
     }
 
     .prog-bar.blue {
       background: linear-gradient(90deg, #3B82F6, #60A5FA);
     }
 
-    /* Results */
-    .results-wrap {
+    /* ── Result card with tabs ── */
+    .result-card {
       display: none;
     }
 
-    .results-wrap.on {
+    .result-card.on {
       display: block;
     }
 
-    .results-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: .75rem;
-    }
-
-    .results-title {
-      font-size: .72rem;
-      font-weight: 800;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .07em;
-    }
-
-    .export-btn {
-      display: flex;
-      align-items: center;
-      gap: .35rem;
-      background: var(--light);
-      border: 1.5px solid var(--border2);
-      color: var(--primary);
-      border-radius: 8px;
-      padding: .35rem .75rem;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: .73rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .18s;
-    }
-
-    .export-btn:hover {
-      background: var(--border);
-    }
-
-    .result-summary {
+    /* Summary counters row */
+    .summary-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: .55rem;
-      margin-bottom: 1rem;
+      gap: .6rem;
+      margin-bottom: 1.1rem;
     }
 
-    .rs {
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: .65rem .5rem;
+    .sc {
+      border-radius: 12px;
+      padding: .75rem .6rem;
       text-align: center;
+      cursor: pointer;
+      transition: all .18s;
+      border: 2px solid transparent;
     }
 
-    .rs.green {
+    .sc:hover {
+      transform: translateY(-1px);
+    }
+
+    .sc.green {
       background: #ECFDF5;
       border-color: #6EE7B7;
     }
 
-    .rs.amber {
-      background: #FFFBEB;
-      border-color: #FDE68A;
-    }
-
-    .rs.blue {
+    .sc.blue {
       background: #EFF6FF;
       border-color: #BFDBFE;
     }
 
-    .rs.red {
+    .sc.amber {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+    }
+
+    .sc.red {
       background: #FEF2F2;
       border-color: #FCA5A5;
     }
 
-    .rs-n {
+    .sc.active-tab {
+      box-shadow: 0 0 0 3px rgba(0, 87, 60, .18);
+    }
+
+    .sc-n {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       font-weight: 500;
       display: block;
       line-height: 1;
     }
 
-    .rs.green .rs-n {
+    .sc.green .sc-n {
       color: #065F46;
     }
 
-    .rs.amber .rs-n {
-      color: #92400E;
-    }
-
-    .rs.blue .rs-n {
+    .sc.blue .sc-n {
       color: #1D4ED8;
     }
 
-    .rs.red .rs-n {
+    .sc.amber .sc-n {
+      color: #92400E;
+    }
+
+    .sc.red .sc-n {
       color: #991B1B;
     }
 
-    .rs-l {
-      font-size: .62rem;
-      font-weight: 700;
+    .sc-l {
+      font-size: .63rem;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: .04em;
       margin-top: .3rem;
       display: block;
     }
 
-    .rs.green .rs-l {
+    .sc.green .sc-l {
       color: #065F46;
     }
 
-    .rs.amber .rs-l {
-      color: #92400E;
-    }
-
-    .rs.blue .rs-l {
+    .sc.blue .sc-l {
       color: #1D4ED8;
     }
 
-    .rs.red .rs-l {
+    .sc.amber .sc-l {
+      color: #92400E;
+    }
+
+    .sc.red .sc-l {
       color: #991B1B;
     }
 
+    /* Tab panels */
+    .tab-panels {}
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Waiting banner */
+    .waiting-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: .7rem;
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: 12px;
+      padding: .9rem 1.1rem;
+      margin-bottom: .85rem;
+      font-size: .78rem;
+      color: #92400E;
+      line-height: 1.65;
+    }
+
+    .waiting-banner strong {
+      color: #78350F;
+    }
+
+    .waiting-banner-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .resubmit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      background: #92400E;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .42rem .9rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .75rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: .6rem;
+      transition: background .18s;
+    }
+
+    .resubmit-btn:hover {
+      background: #78350F;
+    }
+
+    .resubmit-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* Table */
     .tbl-wrap {
       overflow-x: auto;
       border-radius: 10px;
@@ -867,14 +991,14 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: .74rem;
+      font-size: .73rem;
     }
 
     th {
       background: var(--bg);
       padding: .6rem .8rem;
       text-align: left;
-      font-size: .65rem;
+      font-size: .64rem;
       font-weight: 800;
       color: var(--muted);
       text-transform: uppercase;
@@ -887,7 +1011,6 @@
       padding: .55rem .8rem;
       border-bottom: 1px solid var(--border);
       vertical-align: middle;
-      color: var(--color-text);
     }
 
     tr:last-child td {
@@ -900,21 +1023,30 @@
 
     .td-url {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .67rem;
+      font-size: .66rem;
       color: var(--muted);
-      max-width: 200px;
+      max-width: 220px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
+    .td-url a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .td-url a:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
     .vbadge {
       display: inline-flex;
       align-items: center;
-      gap: .25rem;
-      padding: .2rem .55rem;
+      padding: .18rem .5rem;
       border-radius: 5px;
-      font-size: .67rem;
+      font-size: .66rem;
       font-weight: 700;
       white-space: nowrap;
     }
@@ -943,16 +1075,16 @@
       border: 1px solid #FCA5A5;
     }
 
-    .s-ok {
-      background: #ECFDF5;
-      color: #065F46;
-      border: 1px solid #6EE7B7;
-    }
-
     .s-sent {
       background: #EFF6FF;
       color: #1D4ED8;
       border: 1px solid #BFDBFE;
+    }
+
+    .s-already {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #6EE7B7;
     }
 
     .s-skip {
@@ -967,20 +1099,53 @@
       border: 1px solid #FCA5A5;
     }
 
-    .coverage-text {
-      font-size: .7rem;
-      color: var(--muted);
-      max-width: 160px;
-    }
-
-    .crawl-date {
+    .days-ago {
       font-family: 'JetBrains Mono', monospace;
       font-size: .65rem;
       color: var(--subtle);
-      white-space: nowrap;
     }
 
-    /* Button */
+    .days-ago.overdue {
+      color: #92400E;
+      font-weight: 700;
+    }
+
+    .tbl-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .6rem;
+    }
+
+    .tbl-lbl {
+      font-size: .7rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      background: var(--light);
+      border: 1.5px solid var(--border2);
+      color: var(--primary);
+      border-radius: 8px;
+      padding: .32rem .7rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .71rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .export-btn:hover {
+      background: var(--border);
+    }
+
+    /* ── Main button ── */
     .btn {
       width: 100%;
       padding: .95rem;
@@ -991,7 +1156,6 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: .9rem;
       font-weight: 800;
-      letter-spacing: -.01em;
       cursor: pointer;
       transition: all .2s;
       display: flex;
@@ -1031,55 +1195,7 @@
       margin: 1.25rem 0;
     }
 
-    /* Callouts */
-    .callout {
-      display: flex;
-      gap: .7rem;
-      align-items: flex-start;
-      border-radius: 12px;
-      padding: 1rem 1.1rem;
-      margin-bottom: 1.1rem;
-      font-size: .78rem;
-      line-height: 1.7;
-    }
-
-    .callout.warn {
-      background: #FFFBEB;
-      border: 1.5px solid #FDE68A;
-      color: #92400E;
-    }
-
-    .callout.warn strong {
-      color: #78350F;
-    }
-
-    .callout.info {
-      background: var(--light);
-      border: 1.5px solid var(--border2);
-      color: var(--muted);
-    }
-
-    .callout.info strong {
-      color: var(--primary);
-    }
-
-    .callout.danger {
-      background: #FEF2F2;
-      border: 1.5px solid #FCA5A5;
-      color: #991B1B;
-    }
-
-    .callout.danger strong {
-      color: #7F1D1D;
-    }
-
-    .callout-icon {
-      font-size: 1.05rem;
-      flex-shrink: 0;
-      margin-top: .05rem;
-    }
-
-    /* Toast */
+    /* ── Toast ── */
     .toasts {
       position: fixed;
       bottom: 2rem;
@@ -1099,7 +1215,7 @@
       padding: .8rem 1.2rem;
       font-size: .82rem;
       font-weight: 600;
-      color: var(--color-text);
+      color: var(--text);
       display: flex;
       align-items: center;
       gap: .65rem;
@@ -1142,7 +1258,7 @@
       }
     }
 
-    /* Modal */
+    /* ── Modal ── */
     .overlay {
       position: fixed;
       inset: 0;
@@ -1230,7 +1346,7 @@
 
     .modal-x:hover {
       background: var(--border);
-      color: var(--color-text);
+      color: var(--text);
     }
 
     .modal-body {
@@ -1256,7 +1372,7 @@
     }
 
     .modal-intro strong {
-      color: var(--color-text);
+      color: var(--text);
     }
 
     .gstep {
@@ -1299,15 +1415,10 @@
       display: none;
     }
 
-    .gc {
-      padding-bottom: .25rem;
-    }
-
     .gt {
       font-size: .9rem;
       font-weight: 800;
       margin-bottom: .35rem;
-      letter-spacing: -.01em;
     }
 
     .gp {
@@ -1317,7 +1428,7 @@
     }
 
     .gp strong {
-      color: var(--color-text);
+      color: var(--text);
     }
 
     .gcode {
@@ -1346,20 +1457,6 @@
       line-height: 1.65;
     }
 
-    .gok {
-      display: flex;
-      gap: .55rem;
-      align-items: flex-start;
-      background: #ECFDF5;
-      border: 1.5px solid #6EE7B7;
-      border-radius: 10px;
-      padding: .7rem 1rem;
-      margin-top: .65rem;
-      font-size: .77rem;
-      color: #065F46;
-      line-height: 1.65;
-    }
-
     .modal-sep {
       border: none;
       border-top: 1.5px solid var(--border);
@@ -1383,7 +1480,7 @@
     }
 
     .faq-a strong {
-      color: var(--color-text);
+      color: var(--text);
     }
 
     .faq-head {
@@ -1412,7 +1509,6 @@
       font-weight: 800;
       cursor: pointer;
       transition: background .18s;
-      letter-spacing: -.01em;
     }
 
     .modal-foot-btn:hover {
@@ -1486,7 +1582,7 @@
       </div>
       <div class="step-line" id="sl2"></div>
       <div class="step">
-        <div class="step-n" id="sn3">3</div><span class="step-lbl">Inspecteren &amp; indienen</span>
+        <div class="step-n" id="sn3">3</div><span class="step-lbl">Uitvoeren</span>
       </div>
     </div>
 
@@ -1511,18 +1607,18 @@
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
             <path d="M12 17h.01" />
           </svg>
-          Hulp nodig?
+          Hulp?
         </button>
       </div>
       <div class="tab-row">
         <button class="tab-btn active" id="tabJ" onclick="switchTab('json')">JSON Key plakken</button>
-        <button class="tab-btn" id="tabM" onclick="switchTab('manual')">Handmatig invoeren</button>
+        <button class="tab-btn" id="tabM" onclick="switchTab('manual')">Handmatig</button>
       </div>
       <div id="paneJ">
         <div class="field">
           <label>Service Account JSON</label>
           <textarea id="jsonIn"
-            placeholder='{"type":"service_account","project_id":"...","private_key":"-----BEGIN RSA PRIVATE KEY-----\n...","client_email":"...@....iam.gserviceaccount.com",...}'
+            placeholder='{"type":"service_account","client_email":"...@....iam.gserviceaccount.com","private_key":"-----BEGIN RSA PRIVATE KEY-----\n...",...}'
             oninput="parseJson()"></textarea>
           <div class="hint">📋 Kopieer de volledige inhoud van je .json sleutelbestand</div>
         </div>
@@ -1557,20 +1653,21 @@
           </div>
           <div>
             <div class="card-title">Website &amp; URL's</div>
-            <div class="card-desc">GSC property + de URL's die je wilt inspecteren en indienen</div>
+            <div class="card-desc">GSC property + de URL's die je wilt verwerken</div>
           </div>
         </div>
       </div>
       <div class="field">
         <label>GSC Property URL</label>
         <input type="text" id="siteUrl" placeholder="https://www.jouwsite.nl/" oninput="refreshUI()">
-        <div class="hint">⚠ Exact kopiëren uit Search Console, inclusief trailing slash. Domain property:
+        <div class="hint">Exact kopiëren uit Search Console, inclusief trailing slash. Domain property:
           <strong>sc-domain:jouwsite.nl</strong>
         </div>
       </div>
       <div class="field">
         <label>URL's om te verwerken</label>
-        <textarea id="urlIn" placeholder="https://www.jouwsite.nl/pagina-1&#10;https://www.jouwsite.nl/pagina-2"
+        <textarea id="urlIn"
+          placeholder="https://www.jouwsite.nl/pagina-1&#10;https://www.jouwsite.nl/pagina-2&#10;https://www.jouwsite.nl/pagina-3"
           oninput="analyzeUrls()"></textarea>
         <div class="hint">Eén URL per regel · Dubbelen worden automatisch gefilterd</div>
       </div>
@@ -1578,6 +1675,21 @@
         <div class="stat"><span class="sn" id="stTotal">0</span><span class="sl">Ingevoerd</span></div>
         <div class="stat hi"><span class="sn g" id="stUnique">0</span><span class="sl">Uniek &amp; geldig</span></div>
         <div class="stat"><span class="sn a" id="stDupe">0</span><span class="sl">Dubbel / ongeldig</span></div>
+      </div>
+
+      <!-- Submitted-on date -->
+      <div class="date-field-wrap" id="dateWrap" style="display:none;">
+        <label style="margin-bottom:0;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          Originele indiendatum
+        </label>
+        <input type="date" id="submittedOn" class="date-input" oninput="refreshUI()">
+        <span class="date-hint">Laat leeg = vandaag · Vul in als je een eerdere batch opnieuw controleert</span>
       </div>
     </div>
 
@@ -1591,53 +1703,66 @@
             </svg>
           </div>
           <div>
-            <div class="card-title">Inspecteren &amp; indienen</div>
-            <div class="card-desc">Fase 1: status ophalen · Fase 2: alle URL's indienen bij Google</div>
+            <div class="card-title" id="cardTitle">Inspecteren &amp; indienen</div>
+            <div class="card-desc" id="cardDesc">Fase 1: status ophalen · Fase 2: indienen bij Indexing API</div>
           </div>
         </div>
       </div>
 
-      <!-- Quota's -->
+      <!-- Mode switcher -->
+      <div class="mode-switch">
+        <button class="mode-btn active" id="modeCheck" onclick="setMode('check')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          Alleen controleren
+        </button>
+        <button class="mode-btn submit-mode" id="modeSubmit" onclick="setMode('submit')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          Controleren &amp; indienen
+        </button>
+      </div>
+      <div class="mode-note" id="modeNote">🔍 <strong>Alleen controleren:</strong> haalt de indexeringsstatus op via de
+        Inspection API. Dient niets in. Geen Indexing API quota gebruikt.</div>
+
       <div class="quota-wrap">
         <div class="quota-row">
-          <span class="quota-lbl">🔍 Inspection API (dagelijks)</span>
-          <span class="quota-val" id="quotaInspNum">0 / 2.000</span>
+          <span class="quota-lbl">🔍 Inspection API</span>
+          <span class="quota-val" id="quotaInspNum">0 / 2.000 vandaag</span>
         </div>
         <div class="quota-track">
           <div class="quota-fill" id="quotaInspFill" style="width:0%"></div>
         </div>
       </div>
-      <div class="quota-wrap">
+      <div class="quota-wrap" id="quotaIdxWrap">
         <div class="quota-row">
-          <span class="quota-lbl">📤 Indexing API (dagelijks)</span>
-          <span class="quota-val" id="quotaIdxNum">0 / 200</span>
+          <span class="quota-lbl">📤 Indexing API</span>
+          <span class="quota-val" id="quotaIdxNum">0 / 200 vandaag</span>
         </div>
         <div class="quota-track">
           <div class="quota-fill" id="quotaIdxFill" style="width:0%"></div>
         </div>
       </div>
 
-      <!-- Two-phase progress -->
       <div class="phases" id="phases">
         <div class="phase-row">
           <span class="phase-badge inspect" id="badge1">Fase 1</span>
           <div class="phase-wrap">
-            <div class="prog-top">
-              <span class="prog-lbl" id="prog1Txt">Indexeringsstatus ophalen…</span>
-              <span class="prog-pct" id="prog1Pct">0%</span>
-            </div>
+            <div class="prog-top"><span class="prog-lbl" id="prog1Txt">Wacht op start…</span><span class="prog-pct"
+                id="prog1Pct">0%</span></div>
             <div class="prog-track">
               <div class="prog-bar blue" id="prog1Bar"></div>
             </div>
           </div>
         </div>
-        <div class="phase-row">
+        <div class="phase-row" id="phase2Row">
           <span class="phase-badge index" id="badge2">Fase 2</span>
           <div class="phase-wrap">
-            <div class="prog-top">
-              <span class="prog-lbl" id="prog2Txt">Wacht op fase 1…</span>
-              <span class="prog-pct" id="prog2Pct">—</span>
-            </div>
+            <div class="prog-top"><span class="prog-lbl" id="prog2Txt">Wacht op fase 1…</span><span class="prog-pct"
+                id="prog2Pct">—</span></div>
             <div class="prog-track">
               <div class="prog-bar" id="prog2Bar"></div>
             </div>
@@ -1645,53 +1770,159 @@
         </div>
       </div>
 
-      <!-- Results -->
-      <div class="results-wrap" id="resultsWrap">
+      <!-- Result card with tabs -->
+      <div class="result-card" id="resultCard">
         <hr class="divider" style="margin-top:0;">
-        <div class="results-header">
-          <div class="results-title">Resultaten</div>
-          <button class="export-btn" onclick="exportCsv()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Exporteer CSV
-          </button>
+
+        <!-- Summary counters = clickable tab selectors -->
+        <div class="summary-row">
+          <div class="sc green active-tab" id="sc-all" onclick="showTab('all')">
+            <span class="sc-n" id="cAll">0</span>
+            <span class="sc-l">Alle URL's</span>
+          </div>
+          <div class="sc blue" id="sc-indexed" onclick="showTab('indexed')">
+            <span class="sc-n" id="cIndexed">0</span>
+            <span class="sc-l">✓ Geïndexeerd</span>
+          </div>
+          <div class="sc amber" id="sc-waiting" onclick="showTab('waiting')">
+            <span class="sc-n" id="cWaiting">0</span>
+            <span class="sc-l">⏳ Nog wachtend</span>
+          </div>
+          <div class="sc red" id="sc-errors" onclick="showTab('errors')">
+            <span class="sc-n" id="cErrors">0</span>
+            <span class="sc-l">✗ Fouten</span>
+          </div>
         </div>
-        <div class="result-summary">
-          <div class="rs green"><span class="rs-n" id="rAlready">0</span><span class="rs-l">Al geïndexeerd</span></div>
-          <div class="rs blue"> <span class="rs-n" id="rSent">0</span> <span class="rs-l">Ingediend ✓</span></div>
-          <div class="rs amber"><span class="rs-n" id="rSkip">0</span> <span class="rs-l">Limiet bereikt</span></div>
-          <div class="rs red"> <span class="rs-n" id="rErr">0</span> <span class="rs-l">Fout</span></div>
-        </div>
-        <div class="tbl-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>GSC Status</th>
-                <th>URL</th>
-                <th>Coverage</th>
-                <th>Indienen</th>
-                <th>Laatste crawl</th>
-              </tr>
-            </thead>
-            <tbody id="resultsTbody"></tbody>
-          </table>
-        </div>
+
+        <!-- Tab panels -->
+        <div class="tab-panels">
+
+          <!-- ALL -->
+          <div class="tab-panel active" id="panel-all">
+            <div class="tbl-header-row">
+              <span class="tbl-lbl">Alle URL's</span>
+              <button class="export-btn" onclick="exportCsv('all')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                CSV
+              </button>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>GSC Status</th>
+                    <th>URL</th>
+                    <th>Coverage</th>
+                    <th>Ingediend</th>
+                    <th>Dagen geleden</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-all"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- INDEXED -->
+          <div class="tab-panel" id="panel-indexed">
+            <div class="tbl-header-row">
+              <span class="tbl-lbl">Geïndexeerde URL's</span>
+              <button class="export-btn" onclick="exportCsv('indexed')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                CSV
+              </button>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>URL</th>
+                    <th>Coverage</th>
+                    <th>Laatste crawl</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-indexed"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- WAITING -->
+          <div class="tab-panel" id="panel-waiting">
+            <div id="waitingBannerWrap"></div>
+            <div class="tbl-header-row">
+              <span class="tbl-lbl">Nog wachtend op indexering</span>
+              <button class="export-btn" onclick="exportCsv('waiting')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                CSV
+              </button>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>GSC Status</th>
+                    <th>URL</th>
+                    <th>Coverage</th>
+                    <th>Dagen wachtend</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-waiting"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ERRORS -->
+          <div class="tab-panel" id="panel-errors">
+            <div class="tbl-header-row">
+              <span class="tbl-lbl">Fouten</span>
+              <button class="export-btn" onclick="exportCsv('errors')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                CSV
+              </button>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>URL</th>
+                    <th>Fase</th>
+                    <th>Foutmelding</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-errors"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /tab-panels -->
         <hr class="divider">
-      </div>
+      </div><!-- /result-card -->
 
       <button class="btn" id="submitBtn" onclick="runAll()" disabled>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polygon points="5 3 19 12 5 21 5 3" />
         </svg>
-        Inspecteren &amp; indienen bij Google
+        <span id="btnLabel">Inspecteren &amp; indienen bij Google</span>
       </button>
       <div class="btn-hint" id="btnHint">Doorloop stap 1 en 2 om door te gaan</div>
     </div>
 
-  </div>
+  </div><!-- /page -->
 
   <div class="toasts" id="toasts"></div>
 
@@ -1709,7 +1940,7 @@
           </div>
           <div>
             <div class="modal-h">Setup gids &amp; veelgestelde vragen</div>
-            <div class="modal-s">Google Search Console · Inspection + Indexing API</div>
+            <div class="modal-s">Inspection API + Indexing API · Google Search Console</div>
           </div>
         </div>
         <button class="modal-x" onclick="closeModal()">
@@ -1720,10 +1951,8 @@
         </button>
       </div>
       <div class="modal-body">
-
-        <p class="modal-intro">Deze tool combineert twee Google APIs. <strong>Fase 1</strong> inspecteert de huidige
-          indexeringsstatus via de URL Inspection API. <strong>Fase 2</strong> dient alle URL's in via de Indexing API
-          om Google te vragen ze te (re)crawlen.</p>
+        <p class="modal-intro">De tool werkt in twee fases: <strong>inspecteren</strong> (wat weet Google van deze URL?)
+          en <strong>indienen</strong> (recrawl-verzoek sturen). Daarna zie je drie tabs met de resultaten.</p>
 
         <div class="gstep">
           <div class="gn-col">
@@ -1731,89 +1960,75 @@
             <div class="gl"></div>
           </div>
           <div class="gc">
-            <div class="gt">Google Cloud Project + beide APIs inschakelen</div>
-            <p class="gp">Maak een project aan op <strong>console.cloud.google.com</strong>. Schakel vervolgens
-              <strong>twee</strong> APIs in via Bibliotheek:
-            </p>
-            <div class="gcode">1. "Google Search Console API" → voor inspecteren<br>2. "Web Search Indexing API" → voor
-              indienen</div>
+            <div class="gt">Twee APIs inschakelen in Google Cloud</div>
+            <p class="gp">Ga naar <strong>console.cloud.google.com → API's &amp; Services → Bibliotheek</strong> en
+              schakel beiden in:</p>
+            <div class="gcode">1. Google Search Console API (inspecteren)<br>2. Web Search Indexing API (indienen)</div>
           </div>
         </div>
-
         <div class="gstep">
           <div class="gn-col">
             <div class="gn">2</div>
             <div class="gl"></div>
           </div>
           <div class="gc">
-            <div class="gt">Service Account aanmaken + JSON downloaden</div>
-            <p class="gp">Ga naar <strong>Inloggegevens → Service-account aanmaken</strong>. Download daarna een JSON
-              sleutelbestand via <strong>Sleutels → Sleutel toevoegen → JSON</strong>.</p>
-            <div class="gtip"><span>🔒</span><span>Bewaar dit bestand veilig — het geeft volledige API-toegang.</span>
-            </div>
+            <div class="gt">Service Account + JSON key</div>
+            <p class="gp">Maak een service account aan via <strong>Inloggegevens → Service-account aanmaken</strong>.
+              Download daarna een JSON sleutelbestand via <strong>Sleutels → Sleutel toevoegen → JSON</strong>.</p>
+            <div class="gtip"><span>🔒</span><span>Bewaar dit bestand veilig — deel het nooit.</span></div>
           </div>
         </div>
-
         <div class="gstep">
           <div class="gn-col">
             <div class="gn">3</div>
             <div class="gl"></div>
           </div>
           <div class="gc">
-            <div class="gt">Service Account toevoegen als Eigenaar in GSC</div>
-            <p class="gp">Ga naar Search Console → je property → <strong>Instellingen → Gebruikers → Gebruiker
-                toevoegen</strong>. Vul het service account e-mailadres in en geef de rol <strong>Eigenaar</strong>.</p>
-            <div class="gcode">📧 naam@project.iam.gserviceaccount.com<br>🔑 Rol: Eigenaar (verplicht voor beide APIs)
-            </div>
+            <div class="gt">Service Account als Eigenaar in Search Console</div>
+            <p class="gp">GSC → property → <strong>Instellingen → Gebruikers → Gebruiker toevoegen</strong>. Rol:
+              <strong>Eigenaar</strong> (verplicht voor beide APIs).
+            </p>
+            <div class="gcode">📧 naam@project.iam.gserviceaccount.com<br>🔑 Rol: Eigenaar</div>
           </div>
         </div>
-
         <div class="gstep">
           <div class="gn-col">
             <div class="gn">4</div>
             <div class="gl"></div>
           </div>
           <div class="gc">
-            <div class="gt">Site URL correct invullen</div>
-            <p class="gp">Kopieer de property URL letterlijk uit Search Console, inclusief trailing slash.</p>
-            <div class="gcode">URL-prefix: https://www.jouwsite.nl/<br>Domain: sc-domain:jouwsite.nl</div>
+            <div class="gt">Indiendatum gebruiken voor "Nog wachtend"</div>
+            <p class="gp">Vul je de <strong>originele indiendatum</strong> in (bv. de datum van een vorige run), dan
+              markeert de tool URL's die <strong>14+ dagen geleden</strong> zijn ingediend en nog steeds niet
+              geïndexeerd zijn als "Nog wachtend". Zo zie je direct welke URL's echt aandacht nodig hebben.</p>
           </div>
         </div>
 
         <hr class="modal-sep">
         <div class="faq-head">Kan ik een ban of penalty krijgen?</div>
-
         <div class="faq-item">
-          <div class="faq-q">🔍 URL Inspection API — volledig veilig</div>
-          <div class="faq-a">De Inspection API is door Google gebouwd voor precies dit gebruik: bulk-inzicht in
-            indexeringsstatus voor jouw eigen property. Lezen geeft nooit een penalty. Geen enkel risico.</div>
+          <div class="faq-q">🔍 Inspection API — volledig veilig</div>
+          <div class="faq-a">Officieel door Google gebouwd voor bulk-inzicht in indexeringsstatus voor je eigen
+            property. Lezen geeft nooit een penalty.</div>
         </div>
-
         <div class="faq-item">
-          <div class="faq-q">📤 Indexing API — veilig, maar met nuance</div>
-          <div class="faq-a">Google geeft een <strong>HTTP 200</strong> terug op elk verzoek — ook voor reguliere
-            pagina's. Er is geen technische beperking die het blokkeert. De API is officieel bedoeld voor JobPosting en
-            BroadcastEvent pagina's, maar er staat geen straf op het gebruik voor andere pagina's. Google kan het
-            signaal simpelweg negeren of lager prioriteren. Een ban of penalty krijg je hier <strong>niet</strong> van —
-            dat zijn sancties voor manipulatie van zoekresultaten (spam, cloaking, gekochte links), niet voor
-            API-gebruik voor je eigen site.</div>
+          <div class="faq-q">📤 Indexing API — veilig, met nuance</div>
+          <div class="faq-a">Google geeft HTTP 200 terug ook voor reguliere pagina's. De API is officieel voor
+            JobPosting/BroadcastEvent, maar er staat <strong>geen straf</strong> op gebruik voor andere pagina's —
+            Google negeert het signaal simpelweg of prioriteert het lager. Een ban of penalty krijg je van manipulatie
+            (spam, cloaking, gekochte links), niet van API-gebruik op je eigen site.</div>
         </div>
-
         <div class="faq-item">
-          <div class="faq-q">Wat als Google de Indexing API verzoeken negeert?</div>
-          <div class="faq-a">Dan verandert er niets — je bent precies waar je was. Het slechtste wat kan gebeuren is dat
-            het niet werkt. De beste uitkomst is dat Google de pagina's prioriteit geeft in de crawlwachtrij. Voor
-            pagina's die <strong>"Onbekend bij Google"</strong> zijn, helpt de Indexing API weinig: die pagina's zijn
-            niet vindbaar via interne links of een sitemap. Die moet je eerst toegankelijk maken.</div>
+          <div class="faq-q">Waarom worden niet alle URL's geïndexeerd?</div>
+          <div class="faq-a">URL's met status <strong>"Onbekend bij Google"</strong> zijn waarschijnlijk niet bereikbaar
+            via interne links of een sitemap. De Indexing API helpt daar weinig. Zorg eerst dat die pagina's vindbaar
+            zijn, dan werkt indienen beter.</div>
         </div>
-
         <div class="faq-item">
-          <div class="faq-q">Wat zijn de quota's?</div>
-          <div class="faq-a"><strong>Inspection API:</strong> 2.000 verzoeken per dag per property. <strong>Indexing
-              API:</strong> 200 verzoeken per dag (standaard). Als je meer nodig hebt, kun je bij Google een
-            quota-uitbreiding aanvragen via de Google Cloud Console.</div>
+          <div class="faq-q">Quota's</div>
+          <div class="faq-a"><strong>Inspection:</strong> 2.000/dag per property. <strong>Indexing:</strong> 200/dag
+            standaard (uitbreidbaar via Google Cloud Console).</div>
         </div>
-
       </div>
       <div class="modal-foot">
         <button class="modal-foot-btn" onclick="closeModal()">Sluiten en aan de slag →</button>
@@ -1822,8 +2037,26 @@
   </div>
 
   <script>
-    // ── Gate ─────────────────────────────────────────────────────────────────────
-    const PW = 'Onlineklik2012', SK = 'gsc_auth3';
+    // ── Mode ──────────────────────────────────────────────────────────────────────
+    let currentMode = 'check'; // 'check' or 'submit'
+    function setMode(m) {
+      currentMode = m;
+      const isSubmit = m === 'submit';
+      document.getElementById('modeCheck').classList.toggle('active', !isSubmit);
+      document.getElementById('modeSubmit').classList.toggle('active', isSubmit);
+      document.getElementById('modeNote').innerHTML = isSubmit
+        ? '📤 <strong>Controleren &amp; indienen:</strong> haalt eerst de status op, dient daarna alle URL&#39;s in via de Indexing API (max 200/dag).'
+        : '🔍 <strong>Alleen controleren:</strong> haalt de indexeringsstatus op via de Inspection API. Dient niets in. Geen Indexing API quota gebruikt.';
+      document.getElementById('quotaIdxWrap').style.display = isSubmit ? '' : 'none';
+      document.getElementById('phase2Row').style.display = isSubmit ? '' : 'none';
+      document.getElementById('cardTitle').textContent = isSubmit ? 'Inspecteren & indienen' : 'Indexeringsstatus controleren';
+      document.getElementById('cardDesc').textContent = isSubmit ? 'Fase 1: status ophalen · Fase 2: indienen bij Indexing API' : 'Haalt direct de indexeringsstatus op per URL via Google';
+      document.getElementById('btnLabel').textContent = isSubmit ? 'Inspecteren & indienen bij Google' : 'Indexeringsstatus ophalen';
+      refreshUI();
+    }
+
+    // ── Gate ──────────────────────────────────────────────────────────────────────
+    const PW = 'Onlineklik2012', SK = 'gsc_auth4';
     function checkPw() {
       if (document.getElementById('pwInput').value === PW) {
         sessionStorage.setItem(SK, '1');
@@ -1846,22 +2079,19 @@
     else setTimeout(() => document.getElementById('pwInput').focus(), 100);
 
     // ── State ─────────────────────────────────────────────────────────────────────
-    let creds = null, urls = [], tab = 'json', running = false, resultData = [];
-    const QINSP_KEY = 'gsc_q_insp2', QIDX_KEY = 'gsc_q_idx2';
+    let creds = null, urls = [], tab = 'json', running = false, allRows = [];
+    const QINSP_KEY = 'gsc_qi2', QIDX_KEY = 'gsc_qx2';
     const QINSP_MAX = 2000, QIDX_MAX = 200;
+    const WAITING_DAYS = 14; // days threshold
 
     // ── Quota ─────────────────────────────────────────────────────────────────────
-    function getQ(key) {
-      const today = new Date().toISOString().slice(0, 10);
-      try { const q = JSON.parse(localStorage.getItem(key) || '{}'); return q.date === today ? q : { date: today, used: 0 }; }
-      catch { return { date: new Date().toISOString().slice(0, 10), used: 0 }; }
-    }
-    function saveQ(key, q) { localStorage.setItem(key, JSON.stringify(q)); }
+    function getQ(k) { const t = new Date().toISOString().slice(0, 10); try { const q = JSON.parse(localStorage.getItem(k) || '{}'); return q.date === t ? q : { date: t, used: 0 }; } catch { return { date: new Date().toISOString().slice(0, 10), used: 0 }; } }
+    function saveQ(k, q) { localStorage.setItem(k, JSON.stringify(q)); }
     function refreshQuotas() {
       const qi = getQ(QINSP_KEY), qx = getQ(QIDX_KEY);
       const pi = Math.min(qi.used / QINSP_MAX * 100, 100), px = Math.min(qx.used / QIDX_MAX * 100, 100);
-      document.getElementById('quotaInspNum').textContent = `${qi.used.toLocaleString('nl-NL')} / 2.000`;
-      document.getElementById('quotaIdxNum').textContent = `${qx.used.toLocaleString('nl-NL')} / 200`;
+      document.getElementById('quotaInspNum').textContent = `${qi.used.toLocaleString('nl-NL')} / 2.000 vandaag`;
+      document.getElementById('quotaIdxNum').textContent = `${qx.used.toLocaleString('nl-NL')} / 200 vandaag`;
       const fi = document.getElementById('quotaInspFill'); fi.style.width = pi + '%'; fi.className = 'quota-fill' + (pi >= 90 ? ' danger' : pi >= 65 ? ' warn' : '');
       const fx = document.getElementById('quotaIdxFill'); fx.style.width = px + '%'; fx.className = 'quota-fill' + (px >= 90 ? ' danger' : px >= 65 ? ' warn' : '');
     }
@@ -1909,7 +2139,7 @@
     // ── URLs ──────────────────────────────────────────────────────────────────────
     function analyzeUrls() {
       const raw = document.getElementById('urlIn').value;
-      if (!raw.trim()) { urls = []; document.getElementById('statsBar').style.display = 'none'; refreshUI(); return; }
+      if (!raw.trim()) { urls = []; document.getElementById('statsBar').style.display = 'none'; document.getElementById('dateWrap').style.display = 'none'; refreshUI(); return; }
       const parts = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
       const valid = parts.filter(u => { try { new URL(u); return u.startsWith('http'); } catch { return false; } });
       const seen = new Set(); let dupes = 0; urls = [];
@@ -1918,6 +2148,7 @@
       document.getElementById('stUnique').textContent = urls.length;
       document.getElementById('stDupe').textContent = dupes + (parts.length - valid.length);
       document.getElementById('statsBar').style.display = '';
+      document.getElementById('dateWrap').style.display = urls.length > 0 ? 'flex' : 'none';
       refreshUI();
     }
 
@@ -1926,16 +2157,31 @@
       refreshSteps(); refreshQuotas();
       const btn = document.getElementById('submitBtn'), hint = document.getElementById('btnHint');
       const site = document.getElementById('siteUrl').value.trim();
-      const qi = getQ(QINSP_KEY), qx = getQ(QIDX_KEY);
+      const qi = getQ(QINSP_KEY);
       if (!creds) { btn.disabled = true; hint.textContent = '↑ Voer eerst je API credentials in (stap 1)'; return; }
       if (!site) { btn.disabled = true; hint.textContent = '↑ Voer de GSC property URL in (stap 2)'; return; }
       if (!urls.length) { btn.disabled = true; hint.textContent = "↑ Voer URL's in (stap 2)"; return; }
-      if (qi.used >= QINSP_MAX) { btn.disabled = true; hint.textContent = '⚠ Inspection API daglimiet (2.000) bereikt'; return; }
+      if (qi.used >= QINSP_MAX) { btn.disabled = true; hint.textContent = '⚠ Inspection API daglimiet bereikt'; return; }
       if (running) { btn.disabled = true; hint.textContent = 'Bezig…'; return; }
       const n = Math.min(urls.length, QINSP_MAX - qi.used);
-      const canIdx = Math.min(n, QIDX_MAX - qx.used);
+      const qx = getQ(QIDX_KEY), canIdx = Math.min(n, QIDX_MAX - qx.used);
       btn.disabled = false;
-      hint.textContent = `Inspecteert ${n} URL's · daarna ${canIdx} indienen bij Indexing API`;
+      if (currentMode === 'check') {
+        hint.textContent = `Controleert indexeringsstatus van ${n} URL's — geen quota voor Indexing API`;
+      } else {
+        hint.textContent = `Inspecteert ${n} URL's · daarna max ${canIdx} indienen bij Indexing API`;
+      }
+    }
+
+    // ── Date helpers ──────────────────────────────────────────────────────────────
+    function getSubmittedDate() {
+      const val = document.getElementById('submittedOn').value;
+      if (val) return new Date(val);
+      return new Date(); // today
+    }
+    function daysAgo(date) {
+      if (!date) return 0;
+      return Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60 * 24));
     }
 
     // ── JWT / OAuth ───────────────────────────────────────────────────────────────
@@ -1964,84 +2210,44 @@
       return d.access_token;
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────────
-    const coverageLabels = {
-      'Submitted and indexed': 'Ingediend en geïndexeerd',
-      'Indexed, not submitted in sitemap': 'Geïndexeerd (niet in sitemap)',
-      'Crawled - currently not indexed': 'Gecrawld — nog niet geïndexeerd',
-      'Discovered - currently not indexed': 'Gevonden — nog niet geïndexeerd',
-      'URL is unknown to Google': 'Onbekend bij Google',
-      "Excluded by 'noindex' tag": 'Uitgesloten door noindex',
-      'Blocked by robots.txt': 'Geblokkeerd door robots.txt',
-      'Page with redirect': 'Redirect',
-      'Alternate page with proper canonical tag': 'Alternatief (canonical)',
-      'Duplicate without user-selected canonical': 'Duplicaat zonder canonical',
-    };
-    function xlate(s) { return coverageLabels[s] || s || '—'; }
-    function fmtDate(iso) { if (!iso) return '—'; try { return new Date(iso).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch { return iso; } }
+    // ── Coverage label map ────────────────────────────────────────────────────────
+    const CL = { 'Submitted and indexed': 'Ingediend en geïndexeerd', 'Indexed, not submitted in sitemap': 'Geïndexeerd (niet in sitemap)', 'Crawled - currently not indexed': 'Gecrawld — nog niet geïndexeerd', 'Discovered - currently not indexed': 'Gevonden — nog niet geïndexeerd', 'URL is unknown to Google': 'Onbekend bij Google', "Excluded by 'noindex' tag": 'Uitgesloten door noindex', 'Blocked by robots.txt': 'Geblokkeerd door robots.txt', 'Page with redirect': 'Redirect', 'Alternate page with proper canonical tag': 'Alternatief (canonical)', 'Duplicate without user-selected canonical': 'Duplicaat zonder canonical' };
+    const xlate = s => CL[s] || s || '—';
+    const fmtDate = iso => { if (!iso) return '—'; try { return new Date(iso).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch { return iso; } };
 
-    function inspBadge(verdict) {
-      if (verdict === 'PASS') return '<span class="vbadge v-pass">✓ Geïndexeerd</span>';
-      if (verdict === 'FAIL') return '<span class="vbadge v-found">⚠ Niet geïndexeerd</span>';
-      if (verdict === 'NEUTRAL') return '<span class="vbadge v-unkn">? Onbekend</span>';
-      return '<span class="vbadge v-err">✗ Fout</span>';
-    }
-    function idxBadge(s) {
-      if (s === 'sent') return '<span class="vbadge s-sent">📤 Ingediend</span>';
-      if (s === 'already') return '<span class="vbadge s-ok">✓ Was al geïndexeerd</span>';
-      if (s === 'skip') return '<span class="vbadge s-skip">— Limiet</span>';
-      if (s === 'err') return '<span class="vbadge s-err">✗ Fout</span>';
-      return '';
-    }
+    // ── Progress ──────────────────────────────────────────────────────────────────
+    function setP1(cur, tot) { const p = tot > 0 ? Math.round(cur / tot * 100) : 0; document.getElementById('prog1Bar').style.width = p + '%'; document.getElementById('prog1Pct').textContent = p + '%'; document.getElementById('prog1Txt').textContent = `Fase 1: ${cur}/${tot} geïnspecteerd`; }
+    function setP2(cur, tot, lbl) { document.getElementById('prog2Pct').textContent = tot > 0 ? Math.round(cur / tot * 100) + '%' : '—'; document.getElementById('prog2Bar').style.width = (tot > 0 ? Math.round(cur / tot * 100) : 0) + '%'; document.getElementById('prog2Txt').textContent = lbl || `Fase 2: ${cur}/${tot} ingediend`; }
 
-    // ── Progress helpers ──────────────────────────────────────────────────────────
-    function setP1(cur, tot) {
-      const pct = tot > 0 ? Math.round(cur / tot * 100) : 0;
-      document.getElementById('prog1Bar').style.width = pct + '%';
-      document.getElementById('prog1Pct').textContent = pct + '%';
-      document.getElementById('prog1Txt').textContent = `Fase 1: ${cur}/${tot} geïnspecteerd`;
-    }
-    function setP2(cur, tot, label) {
-      document.getElementById('prog2Pct').textContent = tot > 0 ? Math.round(cur / tot * 100) + '%' : '—';
-      document.getElementById('prog2Bar').style.width = (tot > 0 ? Math.round(cur / tot * 100) : 0) + '%';
-      document.getElementById('prog2Txt').textContent = label || `Fase 2: ${cur}/${tot} ingediend`;
-    }
-
-    // ── Main flow ─────────────────────────────────────────────────────────────────
+    // ── Main run ──────────────────────────────────────────────────────────────────
     async function runAll() {
       if (running) return;
       running = true; refreshUI();
 
       const siteUrl = document.getElementById('siteUrl').value.trim();
+      const submittedDate = getSubmittedDate();
       const qi = getQ(QINSP_KEY), qx = getQ(QIDX_KEY);
       const inspBatch = urls.slice(0, QINSP_MAX - qi.used);
 
       document.getElementById('phases').classList.add('on');
-      document.getElementById('resultsWrap').classList.remove('on');
-      document.getElementById('resultsTbody').innerHTML = '';
-      resultData = [];
+      document.getElementById('resultCard').classList.remove('on');
+      allRows = [];
 
-      setP1(0, inspBatch.length);
-      setP2(0, 0, 'Wacht op fase 1…');
-
+      setP1(0, inspBatch.length); setP2(0, 0, 'Wacht op fase 1…');
       toast('i', '🔍', `Fase 1: ${inspBatch.length} URL's inspecteren…`);
 
-      // ── FASE 1: Inspection ────────────────────────────────────────────────────
+      // ── Phase 1: Inspect ──────────────────────────────────────────────────────
       let inspToken;
-      try {
-        inspToken = await getToken('https://www.googleapis.com/auth/webmasters.readonly');
-      } catch (e) {
-        toast('e', '❌', 'Authenticatie mislukt: ' + e.message); running = false; refreshUI(); return;
-      }
+      try { inspToken = await getToken('https://www.googleapis.com/auth/webmasters.readonly'); }
+      catch (e) { toast('e', '❌', 'Authenticatie (inspect) mislukt: ' + e.message); running = false; refreshUI(); return; }
 
       const rows = [];
       for (let i = 0; i < inspBatch.length; i++) {
         const url = inspBatch[i]; setP1(i, inspBatch.length);
-        let verdict = 'ERROR', coverage = '', lastCrawl = '';
+        let verdict = 'ERROR', coverage = '', lastCrawl = '', inspError = '';
         try {
           const res = await fetch('https://searchconsole.googleapis.com/v1/urlInspection/index:inspect', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + inspToken },
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + inspToken },
             body: JSON.stringify({ inspectionUrl: url, siteUrl })
           });
           const d = await res.json();
@@ -2050,11 +2256,9 @@
             verdict = r.verdict || 'NEUTRAL';
             coverage = xlate(r.coverageState || '');
             lastCrawl = fmtDate(r.lastCrawlTime);
-          } else {
-            coverage = d.error?.message || `HTTP ${res.status}`;
-          }
-        } catch (e) { coverage = 'Netwerkfout'; }
-        rows.push({ url, verdict, coverage, lastCrawl, idxStatus: 'pending' });
+          } else { inspError = d.error?.message || `HTTP ${res.status}`; coverage = inspError; }
+        } catch (e) { inspError = 'Netwerkfout'; coverage = inspError; }
+        rows.push({ url, verdict, coverage, lastCrawl, inspError, idxStatus: 'pending', idxError: '', submittedDate });
         if (i < inspBatch.length - 1) await new Promise(r => setTimeout(r, 120));
       }
 
@@ -2063,50 +2267,48 @@
       document.getElementById('badge1').className = 'phase-badge done';
       document.getElementById('badge1').textContent = 'Fase 1 ✓';
 
-      toast('i', '📤', `Fase 2: ${Math.min(inspBatch.length, QIDX_MAX - qx.used)} URL's indienen…`);
-
-      // ── FASE 2: Indexing API ──────────────────────────────────────────────────
-      let idxToken;
-      try {
-        idxToken = await getToken('https://www.googleapis.com/auth/indexing');
-      } catch (e) {
-        // Indexing token failed — mark all as skip but still show results
-        rows.forEach(r => { if (r.verdict === 'PASS') r.idxStatus = 'already'; else r.idxStatus = 'err'; });
-        toast('e', '❌', 'Indexing API auth mislukt: ' + e.message);
-        renderResults(rows); running = false; refreshUI(); return;
+      // ── Skip phase 2 if check-only mode ─────────────────────────────────────
+      if (currentMode === 'check') {
+        rows.forEach(r => { r.idxStatus = 'skip'; });
+        allRows = rows; renderAll();
+        const indexed = rows.filter(r => r.verdict === 'PASS').length;
+        const notIndexed = rows.filter(r => r.verdict !== 'PASS' && !r.inspError).length;
+        const errs = rows.filter(r => r.inspError).length;
+        toast('s', '✅', `Klaar! ${indexed} geïndexeerd · ${notIndexed} niet · ${errs} fout`);
+        running = false; refreshUI();
+        showTab('all');
+        return;
       }
 
-      const qxNow = getQ(QIDX_KEY);
-      let idxDone = 0, idxLimit = QIDX_MAX - qxNow.used;
+      toast('i', '📤', `Fase 2: indienen…`);
+
+      // ── Phase 2: Index ────────────────────────────────────────────────────────
+      let idxToken;
+      try { idxToken = await getToken('https://www.googleapis.com/auth/indexing'); }
+      catch (e) {
+        rows.forEach(r => { r.idxStatus = r.inspError ? 'err' : 'skip'; if (r.inspError) r.idxError = 'Auth mislukt: ' + e.message; });
+        toast('e', '❌', 'Indexing API auth mislukt: ' + e.message);
+        allRows = rows; renderAll(); running = false; refreshUI(); return;
+      }
+
+      const qxNow = getQ(QIDX_KEY); let idxLeft = QIDX_MAX - qxNow.used, idxDone = 0;
 
       for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        setP2(i, rows.length);
-
-        if (row.verdict === 'PASS') {
-          // Already indexed — still submit to trigger recrawl for freshness, counts toward quota
-        }
-
-        if (idxLimit <= 0) {
-          row.idxStatus = 'skip'; continue;
-        }
-
+        const row = rows[i]; setP2(i, rows.length);
+        if (row.inspError) { row.idxStatus = 'err'; row.idxError = row.inspError; continue; }
+        if (idxLeft <= 0) { row.idxStatus = 'skip'; continue; }
         try {
           const res = await fetch('https://indexing.googleapis.com/v3/urlNotifications:publish', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idxToken },
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idxToken },
             body: JSON.stringify({ url: row.url, type: 'URL_UPDATED' })
           });
           if (res.ok) {
             row.idxStatus = row.verdict === 'PASS' ? 'already' : 'sent';
-            idxDone++; idxLimit--;
+            idxDone++; idxLeft--;
           } else {
-            const d = await res.json();
-            row.idxStatus = 'err';
-            row.idxError = d.error?.message || `HTTP ${res.status}`;
+            const d = await res.json(); row.idxStatus = 'err'; row.idxError = d.error?.message || `HTTP ${res.status}`;
           }
         } catch (e) { row.idxStatus = 'err'; row.idxError = 'Netwerkfout'; }
-
         if (i < rows.length - 1) await new Promise(r => setTimeout(r, 200));
       }
 
@@ -2115,50 +2317,145 @@
       document.getElementById('badge2').className = 'phase-badge done';
       document.getElementById('badge2').textContent = 'Fase 2 ✓';
 
-      renderResults(rows);
+      allRows = rows; renderAll();
 
       const sent = rows.filter(r => r.idxStatus === 'sent').length;
       const already = rows.filter(r => r.idxStatus === 'already').length;
       const errs = rows.filter(r => r.idxStatus === 'err').length;
-      if (errs === 0) toast('s', '✅', `Klaar! ${sent} ingediend · ${already} waren al geïndexeerd`);
-      else toast('i', '⚠', `${sent} ingediend · ${already} al geïnd · ${errs} fout`);
+      const waiting = rows.filter(r => isWaiting(r)).length;
+      if (errs === 0) toast('s', '✅', `Klaar! ${sent} ingediend · ${already} al geïndexeerd${waiting ? ` · ⚠ ${waiting} wachten >14 dagen` : ''}`);
+      else toast('i', '⚠', `${sent} ingediend · ${already} al geïnd. · ${errs} fout · ${waiting} wachten`);
 
       running = false; refreshUI();
+      showTab('all');
     }
 
-    function renderResults(rows) {
-      resultData = rows;
-      const tbody = document.getElementById('resultsTbody');
-      tbody.innerHTML = '';
-      let cAlready = 0, cSent = 0, cSkip = 0, cErr = 0;
-      rows.forEach(row => {
-        if (row.idxStatus === 'already') cAlready++;
-        else if (row.idxStatus === 'sent') cSent++;
-        else if (row.idxStatus === 'skip') cSkip++;
-        else if (row.idxStatus === 'err') cErr++;
+    // ── Waiting logic ─────────────────────────────────────────────────────────────
+    function isWaiting(row) {
+      // Not indexed AND submitted date is 14+ days ago
+      if (row.verdict === 'PASS') return false;
+      if (row.idxStatus === 'err' || row.idxStatus === 'skip') return false;
+      return daysAgo(row.submittedDate) >= WAITING_DAYS;
+    }
+
+    // ── Render tabs ───────────────────────────────────────────────────────────────
+    function renderAll() {
+      const indexed = allRows.filter(r => r.verdict === 'PASS');
+      const waiting = allRows.filter(r => isWaiting(r));
+      const errors = allRows.filter(r => r.idxStatus === 'err');
+
+      document.getElementById('cAll').textContent = allRows.length;
+      document.getElementById('cIndexed').textContent = indexed.length;
+      document.getElementById('cWaiting').textContent = waiting.length;
+      document.getElementById('cErrors').textContent = errors.length;
+
+      // All tab
+      const tbAll = document.getElementById('tbody-all'); tbAll.innerHTML = '';
+      allRows.forEach(r => {
+        const days = daysAgo(r.submittedDate);
+        const daysEl = `<span class="days-ago${days >= WAITING_DAYS && r.verdict !== 'PASS' ? ' overdue' : ''}">${days}d geleden</span>`;
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-      <td>${inspBadge(row.verdict)}</td>
-      <td><div class="td-url" title="${row.url}">${row.url}</div></td>
-      <td><span class="coverage-text">${row.coverage}</span></td>
-      <td>${idxBadge(row.idxStatus)}${row.idxError ? `<div style="font-size:.64rem;color:#EF4444;margin-top:.2rem;">${row.idxError}</div>` : ''}</td>
-      <td><span class="crawl-date">${row.lastCrawl}</span></td>`;
-        tbody.appendChild(tr);
+        tr.innerHTML = `<td>${inspBadge(r.verdict)}</td><td><div class="td-url" title="${r.url}"><a href="https://www.google.com/search?q=site:${encodeURIComponent(r.url)}" target="_blank" title="site: check in Google">${r.url}</a></div></td><td><span style="font-size:.7rem;color:var(--muted)">${r.coverage}</span></td><td>${idxBadge(r.idxStatus)}</td><td>${daysEl}</td>`;
+        tbAll.appendChild(tr);
       });
-      document.getElementById('rAlready').textContent = cAlready;
-      document.getElementById('rSent').textContent = cSent;
-      document.getElementById('rSkip').textContent = cSkip;
-      document.getElementById('rErr').textContent = cErr;
-      document.getElementById('resultsWrap').classList.add('on');
+
+      // Indexed tab
+      const tbIdx = document.getElementById('tbody-indexed'); tbIdx.innerHTML = '';
+      indexed.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><div class="td-url"><a href="https://www.google.com/search?q=site:${encodeURIComponent(r.url)}" target="_blank">${r.url}</a></div></td><td><span style="font-size:.7rem;color:var(--muted)">${r.coverage}</span></td><td><span class="days-ago">${r.lastCrawl}</span></td>`;
+        tbIdx.appendChild(tr);
+      });
+
+      // Waiting tab
+      const tbWait = document.getElementById('tbody-waiting'); tbWait.innerHTML = '';
+      const bannerWrap = document.getElementById('waitingBannerWrap');
+      if (waiting.length > 0) {
+        bannerWrap.innerHTML = `<div class="waiting-banner"><span class="waiting-banner-icon">⏳</span><div><strong>${waiting.length} URL${waiting.length !== 1 ? "'s zijn" : " is"} al ${WAITING_DAYS}+ dagen geleden ingediend en nog steeds niet geïndexeerd.</strong> Dit kan betekenen dat Google de pagina's nog niet heeft kunnen crawlen, of dat de pagina's niet goed bereikbaar zijn via interne links of sitemap.<br><button class="resubmit-btn" id="resubmitBtn" onclick="resubmitWaiting()">📤 Opnieuw indienen (${waiting.length} URL's)</button></div></div>`;
+      } else {
+        bannerWrap.innerHTML = `<div style="font-size:.8rem;color:var(--muted);padding:.5rem 0 1rem;">Geen URL's die al ${WAITING_DAYS}+ dagen wachten. Goed bezig!</div>`;
+      }
+      waiting.forEach(r => {
+        const days = daysAgo(r.submittedDate);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${inspBadge(r.verdict)}</td><td><div class="td-url"><a href="https://www.google.com/search?q=site:${encodeURIComponent(r.url)}" target="_blank">${r.url}</a></div></td><td><span style="font-size:.7rem;color:var(--muted)">${r.coverage}</span></td><td><span class="days-ago overdue">${days}d</span></td>`;
+        tbWait.appendChild(tr);
+      });
+
+      // Errors tab
+      const tbErr = document.getElementById('tbody-errors'); tbErr.innerHTML = '';
+      errors.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><div class="td-url">${r.url}</div></td><td><span style="font-size:.7rem;">Indienen</span></td><td><span style="font-size:.7rem;color:var(--red)">${r.idxError || r.inspError || 'Onbekend'}</span></td>`;
+        tbErr.appendChild(tr);
+      });
+
+      document.getElementById('resultCard').classList.add('on');
+    }
+
+    // ── Re-submit waiting URLs ────────────────────────────────────────────────────
+    async function resubmitWaiting() {
+      const waiting = allRows.filter(r => isWaiting(r));
+      if (!waiting.length) return;
+      const btn = document.getElementById('resubmitBtn');
+      if (btn) btn.disabled = true;
+      toast('i', '📤', `${waiting.length} URL's opnieuw indienen…`);
+      let idxToken;
+      try { idxToken = await getToken('https://www.googleapis.com/auth/indexing'); }
+      catch (e) { toast('e', '❌', 'Auth mislukt: ' + e.message); if (btn) btn.disabled = false; return; }
+      const qx = getQ(QIDX_KEY); let done = 0, left = QIDX_MAX - qx.used;
+      for (const row of waiting) {
+        if (left <= 0) break;
+        try {
+          const res = await fetch('https://indexing.googleapis.com/v3/urlNotifications:publish', {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idxToken },
+            body: JSON.stringify({ url: row.url, type: 'URL_UPDATED' })
+          });
+          if (res.ok) { row.idxStatus = 'sent'; done++; left--; }
+          else { const d = await res.json(); row.idxError = d.error?.message || `HTTP ${res.status}`; }
+        } catch (e) { row.idxError = 'Netwerkfout'; }
+        await new Promise(r => setTimeout(r, 220));
+      }
+      qx.used += done; saveQ(QIDX_KEY, qx); refreshQuotas();
+      toast('s', '✅', `${done} wachtende URL's opnieuw ingediend`);
+      renderAll(); showTab('waiting');
+    }
+
+    // ── Tab switching ─────────────────────────────────────────────────────────────
+    function showTab(name) {
+      ['all', 'indexed', 'waiting', 'errors'].forEach(t => {
+        document.getElementById('panel-' + t).classList.toggle('active', t === name);
+        const sc = document.getElementById('sc-' + t);
+        if (sc) sc.classList.toggle('active-tab', t === name);
+      });
+    }
+
+    // ── Badges ────────────────────────────────────────────────────────────────────
+    function inspBadge(v) {
+      if (v === 'PASS') return '<span class="vbadge v-pass">✓ Geïndexeerd</span>';
+      if (v === 'FAIL') return '<span class="vbadge v-found">⚠ Niet geïnd.</span>';
+      if (v === 'NEUTRAL') return '<span class="vbadge v-unkn">? Onbekend</span>';
+      return '<span class="vbadge v-err">✗ Fout</span>';
+    }
+    function idxBadge(s) {
+      if (s === 'sent') return '<span class="vbadge s-sent">📤 Ingediend</span>';
+      if (s === 'already') return '<span class="vbadge s-already">✓ Al geïnd.</span>';
+      if (s === 'skip') return currentMode === 'check' ? '<span class="vbadge s-skip">— Niet ingediend</span>' : '<span class="vbadge s-skip">— Limiet</span>';
+      if (s === 'err') return '<span class="vbadge v-err">✗ Fout</span>';
+      return '';
     }
 
     // ── CSV export ────────────────────────────────────────────────────────────────
-    function exportCsv() {
-      const h = 'URL,GSC Status,Coverage,Indienen,Laatste crawl\n';
-      const r = resultData.map(r => `"${r.url}","${r.verdict}","${r.coverage}","${r.idxStatus}","${r.lastCrawl}"`).join('\n');
-      const blob = new Blob([h + r], { type: 'text/csv;charset=utf-8;' });
+    function exportCsv(set) {
+      let data = allRows;
+      if (set === 'indexed') data = allRows.filter(r => r.verdict === 'PASS');
+      if (set === 'waiting') data = allRows.filter(r => isWaiting(r));
+      if (set === 'errors') data = allRows.filter(r => r.idxStatus === 'err');
+      const h = 'URL,GSC Status,Coverage,Indienen status,Dagen wachtend,Laatste crawl\n';
+      const rows = data.map(r => `"${r.url}","${r.verdict}","${r.coverage}","${r.idxStatus}","${daysAgo(r.submittedDate)}","${r.lastCrawl}"`).join('\n');
+      const blob = new Blob([h + rows], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-      a.download = `gsc-results-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+      a.download = `gsc-${set}-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
     }
 
     // ── Toast ─────────────────────────────────────────────────────────────────────
@@ -2166,7 +2463,7 @@
       const c = document.getElementById('toasts');
       const el = document.createElement('div'); el.className = `toast ${type}`;
       el.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
-      c.appendChild(el); setTimeout(() => el.remove(), 4300);
+      c.appendChild(el); setTimeout(() => el.remove(), 4500);
     }
 
     // ── Modal ─────────────────────────────────────────────────────────────────────
@@ -2176,6 +2473,9 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
     // ── Init ──────────────────────────────────────────────────────────────────────
+    // Set today as default for date input
+    document.getElementById('submittedOn').value = new Date().toISOString().slice(0, 10);
+    setMode('check'); // default to check-only, hides idx quota + phase 2
     refreshQuotas(); refreshUI();
   </script>
 </body>
